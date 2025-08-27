@@ -1,0 +1,98 @@
+[
+  {
+    "date": "2024-01-20",
+    "state": "Maharashtra",
+    "platform": "twitter",
+    "health_mentions": 45,
+    "disease_mentions": 23,
+    "sentiment_score": 0.3
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Maharashtra",
+    "platform": "twitter",
+    "health_mentions": 67,
+    "disease_mentions": 34,
+    "sentiment_score": 0.1
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Maharashtra",
+    "platform": "twitter",
+    "health_mentions": 56,
+    "disease_mentions": 28,
+    "sentiment_score": 0.2
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Karnataka",
+    "platform": "twitter",
+    "health_mentions": 32,
+    "disease_mentions": 16,
+    "sentiment_score": 0.4
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Karnataka",
+    "platform": "twitter",
+    "health_mentions": 48,
+    "disease_mentions": 24,
+    "sentiment_score": 0.2
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Karnataka",
+    "platform": "twitter",
+    "health_mentions": 41,
+    "disease_mentions": 21,
+    "sentiment_score": 0.3
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Delhi",
+    "platform": "twitter",
+    "health_mentions": 78,
+    "disease_mentions": 39,
+    "sentiment_score": 0.1
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Delhi",
+    "platform": "twitter",
+    "health_mentions": 94,
+    "disease_mentions": 47,
+    "sentiment_score": -0.1
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Delhi",
+    "platform": "twitter",
+    "health_mentions": 83,
+    "disease_mentions": 42,
+    "sentiment_score": 0.0
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Tamil Nadu",
+    "platform": "twitter",
+    "health_mentions": 29,
+    "disease_mentions": 14,
+    "sentiment_score": 0.5
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Tamil Nadu",
+    "platform": "twitter",
+    "health_mentions": 38,
+    "disease_mentions": 19,
+    "sentiment_score": 0.3
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Tamil Nadu",
+    "platform": "twitter",
+    "health_mentions": 34,
+    "disease_mentions": 17,
+    "sentiment_score": 0.4
+  }
+]

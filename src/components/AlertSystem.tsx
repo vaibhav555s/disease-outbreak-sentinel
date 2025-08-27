@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, TrendingUp, MapPin, Clock, CheckCircle } from "lucide-react";
+import { usePharmacyData, useHospitalData, useSearchTrendData, useSocialMentionData } from "@/lib/data";
+import { generateAlerts, calculateRiskScores, detectPharmacyAnomalies, detectHospitalAnomalies } from "@/lib/analytics";
+import { CONFIG } from "@/config";
 
 interface Alert {
   id: string;
-  type: "outbreak" | "anomaly" | "prediction";
+  type: "outbreak" | "anomaly" | "trend" | "correlation";
   severity: "low" | "medium" | "high" | "critical";
   disease: string;
   location: string;
@@ -18,68 +21,70 @@ interface Alert {
 }
 
 export const AlertSystem = () => {
-  const [alerts, setAlerts] = useState<Alert[]>([
-    {
-      id: "1",
-      type: "prediction",
-      severity: "critical",
-      disease: "Dengue",
-      location: "Pune, Maharashtra",
-      confidence: 94,
-      description: "Dengue outbreak predicted based on pharmacy sales spike (fever medicines +35%), increased hospital OPD visits, and rising Google searches for 'dengue symptoms'",
-      timestamp: new Date(Date.now() - 5 * 60 * 1000),
-      acknowledged: false,
-      estimatedDays: 3
-    },
-    {
-      id: "2",
-      type: "anomaly",
-      severity: "high",
-      disease: "Fever",
-      location: "Delhi NCR",
-      confidence: 85,
-      description: "Unusual spike in fever medication sales detected. 20% increase from baseline over the past 3 days",
-      timestamp: new Date(Date.now() - 15 * 60 * 1000),
-      acknowledged: false,
-      estimatedDays: 2
-    },
-    {
-      id: "3",
-      type: "outbreak",
-      severity: "medium",
-      disease: "Viral Fever",
-      location: "Chennai, Tamil Nadu",
-      confidence: 72,
-      description: "Correlation detected between social media mentions and hospital visit patterns",
-      timestamp: new Date(Date.now() - 45 * 60 * 1000),
-      acknowledged: true,
-      estimatedDays: 5
-    }
-  ]);
+  const { data: pharmacyData } = usePharmacyData();
+  const { data: hospitalData } = useHospitalData();
+  const { data: searchData } = useSearchTrendData();
+  const { data: socialData } = useSocialMentionData();
+  
+  const [acknowledgedAlerts, setAcknowledgedAlerts] = useState<Set<string>>(new Set());
 
-  // Simulate new alerts
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.8) {
-        const newAlert: Alert = {
-          id: Date.now().toString(),
-          type: Math.random() > 0.5 ? "anomaly" : "prediction",
-          severity: ["low", "medium", "high"][Math.floor(Math.random() * 3)] as any,
-          disease: ["Malaria", "Chikungunya", "Viral Fever", "Typhoid"][Math.floor(Math.random() * 4)],
-          location: ["Mumbai", "Bangalore", "Hyderabad", "Kolkata"][Math.floor(Math.random() * 4)],
-          confidence: Math.floor(Math.random() * 40) + 60,
-          description: "AI detected correlation pattern in multi-source health data",
-          timestamp: new Date(),
+  // Generate alerts from real data
+  const generatedAlerts = useMemo(() => {
+    if (CONFIG.dataMode === "simulated" || !pharmacyData || !hospitalData || !searchData || !socialData) {
+      // Return static alerts for simulated mode
+      return [
+        {
+          id: "sim-1",
+          type: "outbreak" as const,
+          severity: "critical" as const,
+          disease: "Dengue",
+          location: "Pune, Maharashtra",
+          confidence: 94,
+          description: "Dengue outbreak predicted based on pharmacy sales spike (fever medicines +35%), increased hospital OPD visits, and rising Google searches for 'dengue symptoms'",
+          timestamp: new Date(Date.now() - 5 * 60 * 1000),
           acknowledged: false,
-          estimatedDays: Math.floor(Math.random() * 7) + 1
-        };
-        
-        setAlerts(prev => [newAlert, ...prev.slice(0, 4)]);
-      }
-    }, 10000);
+          estimatedDays: 3
+        },
+        {
+          id: "sim-2",
+          type: "anomaly" as const,
+          severity: "high" as const,
+          disease: "Fever Pattern",
+          location: "Delhi NCR",
+          confidence: 85,
+          description: "Unusual spike in fever medication sales detected. 20% increase from baseline over the past 3 days",
+          timestamp: new Date(Date.now() - 15 * 60 * 1000),
+          acknowledged: false,
+          estimatedDays: 2
+        },
+        {
+          id: "sim-3",
+          type: "correlation" as const,
+          severity: "medium" as const,
+          disease: "Viral Fever",
+          location: "Chennai, Tamil Nadu",
+          confidence: 72,
+          description: "Correlation detected between social media mentions and hospital visit patterns",
+          timestamp: new Date(Date.now() - 45 * 60 * 1000),
+          acknowledged: true,
+          estimatedDays: 5
+        }
+      ];
+    }
 
-    return () => clearInterval(interval);
-  }, []);
+    // Generate alerts from real data
+    const riskScores = calculateRiskScores(pharmacyData, hospitalData, searchData, socialData);
+    const pharmacyAnomalies = detectPharmacyAnomalies(pharmacyData);
+    const hospitalAnomalies = detectHospitalAnomalies(hospitalData);
+    
+    return generateAlerts(riskScores, [...pharmacyAnomalies, ...hospitalAnomalies]);
+  }, [pharmacyData, hospitalData, searchData, socialData]);
+
+  // Apply acknowledgment state
+  const alerts = generatedAlerts.map(alert => ({
+    ...alert,
+    acknowledged: acknowledgedAlerts.has(alert.id)
+  }));
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -95,15 +100,14 @@ export const AlertSystem = () => {
     switch (type) {
       case "outbreak": return <AlertTriangle className="w-4 h-4" />;
       case "anomaly": return <TrendingUp className="w-4 h-4" />;
-      case "prediction": return <Clock className="w-4 h-4" />;
+      case "trend": return <Clock className="w-4 h-4" />;
+      case "correlation": return <MapPin className="w-4 h-4" />;
       default: return <AlertTriangle className="w-4 h-4" />;
     }
   };
 
   const acknowledgeAlert = (id: string) => {
-    setAlerts(prev => prev.map(alert => 
-      alert.id === id ? { ...alert, acknowledged: true } : alert
-    ));
+    setAcknowledgedAlerts(prev => new Set([...prev, id]));
   };
 
   const formatTimeAgo = (timestamp: Date) => {
@@ -126,7 +130,9 @@ export const AlertSystem = () => {
           <div className="pulse-health">
             <div className="w-2 h-2 bg-health-danger rounded-full"></div>
           </div>
-          <span className="text-sm text-muted-foreground">Live monitoring</span>
+          <span className="text-sm text-muted-foreground">
+            {CONFIG.dataMode === "simulated" ? "Simulated" : "Live"} monitoring
+          </span>
         </div>
       </div>
       

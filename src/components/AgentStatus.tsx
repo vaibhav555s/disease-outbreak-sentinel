@@ -1,12 +1,14 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Activity, Database, Search, Brain, AlertTriangle } from "lucide-react";
+import { Activity, Database, Search, Brain, AlertTriangle, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { usePharmacyData, useHospitalData, useSearchTrendData, useSocialMentionData } from "@/lib/data";
+import { CONFIG } from "@/config";
 
 interface Agent {
   id: number;
   name: string;
-  status: "active" | "processing" | "idle" | "alert";
+  status: "active" | "processing" | "idle" | "alert" | "error";
   icon: React.ReactNode;
   description: string;
   lastUpdate: string;
@@ -14,70 +16,102 @@ interface Agent {
 }
 
 export const AgentStatus = () => {
-  const [agents, setAgents] = useState<Agent[]>([
+  const { isLoading: pharmacyLoading, error: pharmacyError } = usePharmacyData();
+  const { isLoading: hospitalLoading, error: hospitalError } = useHospitalData();
+  const { isLoading: searchLoading, error: searchError } = useSearchTrendData();
+  const { isLoading: socialLoading, error: socialError } = useSocialMentionData();
+
+  const [agentProgress, setAgentProgress] = useState({
+    collector: 75,
+    normalizer: 85,
+    detector: 60,
+    predictor: 40,
+    alerter: 90
+  });
+
+  // Update agent progress based on data status
+  useEffect(() => {
+    const updateProgress = () => {
+      setAgentProgress(prev => ({
+        collector: CONFIG.dataMode === "simulated" ? 
+          Math.min(100, prev.collector + Math.random() * 3) :
+          (!pharmacyLoading && !hospitalLoading && !searchLoading && !socialLoading) ? 100 : 
+          Math.min(95, prev.collector + Math.random() * 5),
+        normalizer: Math.min(100, prev.normalizer + Math.random() * 2),
+        detector: Math.min(100, prev.detector + Math.random() * 2.5),
+        predictor: Math.min(100, prev.predictor + Math.random() * 1.5),
+        alerter: Math.min(100, prev.alerter + Math.random() * 3)
+      }));
+    };
+
+    const interval = setInterval(updateProgress, 2000);
+    return () => clearInterval(interval);
+  }, [pharmacyLoading, hospitalLoading, searchLoading, socialLoading]);
+
+  const formatTimeAgo = (minutes: number) => {
+    if (minutes < 1) return "Just now";
+    if (minutes < 60) return `${Math.floor(minutes)}min ago`;
+    return `${Math.floor(minutes / 60)}h ago`;
+  };
+
+  const agents: Agent[] = [
     {
       id: 1,
       name: "Data Collector",
-      status: "active",
+      status: (pharmacyError || hospitalError || searchError || socialError) ? "error" :
+        (pharmacyLoading || hospitalLoading || searchLoading || socialLoading) ? "processing" : "active",
       icon: <Database className="w-4 h-4" />,
-      description: "Fetching pharmacy sales & hospital records",
-      lastUpdate: "2 min ago",
-      progress: 85
+      description: CONFIG.dataMode === "simulated" ? 
+        "Generating simulated data streams" :
+        "Fetching pharmacy sales, hospital records & social signals",
+      lastUpdate: formatTimeAgo(Math.random() * 120),
+      progress: agentProgress.collector
     },
     {
       id: 2,
-      name: "Data Cleaner",
+      name: "Cleaner & Normalizer",
       status: "processing",
       icon: <Activity className="w-4 h-4" />,
-      description: "Normalizing time-series data streams",
-      lastUpdate: "1 min ago",
-      progress: 65
+      description: "Standardizing time-series data and removing outliers",
+      lastUpdate: formatTimeAgo(Math.random() * 180),
+      progress: agentProgress.normalizer
     },
     {
       id: 3,
       name: "Trend Detector",
-      status: "alert",
-      icon: <Search className="w-4 h-4" />,
-      description: "Anomaly detected: Fever medicine spike in Delhi",
-      lastUpdate: "30 sec ago"
+      status: agentProgress.detector > 90 ? "alert" : "processing",
+      icon: <TrendingUp className="w-4 h-4" />,
+      description: agentProgress.detector > 90 ? 
+        "Anomaly detected: Unusual patterns in Mumbai & Delhi" :
+        "Analyzing statistical patterns and anomalies",
+      lastUpdate: formatTimeAgo(Math.random() * 90)
     },
     {
       id: 4,
       name: "Predictor",
       status: "processing",
       icon: <Brain className="w-4 h-4" />,
-      description: "Running LSTM model for outbreak forecasting",
-      lastUpdate: "1 min ago",
-      progress: 40
+      description: "Running baseline ML forecasts and risk correlation",
+      lastUpdate: formatTimeAgo(Math.random() * 150),
+      progress: agentProgress.predictor
     },
     {
       id: 5,
       name: "Alert Generator",
       status: "active",
       icon: <AlertTriangle className="w-4 h-4" />,
-      description: "Generating early warning signals",
-      lastUpdate: "45 sec ago"
+      description: "Producing early warning signals with confidence scores",
+      lastUpdate: formatTimeAgo(Math.random() * 60),
+      progress: agentProgress.alerter
     }
-  ]);
-
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAgents(prev => prev.map(agent => ({
-        ...agent,
-        lastUpdate: Math.random() > 0.7 ? "Just now" : agent.lastUpdate,
-        progress: agent.progress ? Math.min(100, agent.progress + Math.random() * 10) : undefined
-      })));
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active": return "bg-health-safe";
       case "processing": return "bg-health-primary";
       case "alert": return "bg-health-danger";
+      case "error": return "bg-destructive";
       default: return "bg-muted";
     }
   };
@@ -87,6 +121,7 @@ export const AgentStatus = () => {
       case "active": return "Active";
       case "processing": return "Processing";
       case "alert": return "Alert";
+      case "error": return "Error";
       default: return "Idle";
     }
   };

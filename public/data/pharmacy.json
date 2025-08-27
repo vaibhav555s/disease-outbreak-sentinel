@@ -1,0 +1,110 @@
+[
+  {
+    "date": "2024-01-20",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "fever_medicine": 145,
+    "cold_medicine": 89,
+    "cough_medicine": 67,
+    "total_sales": 301
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "fever_medicine": 178,
+    "cold_medicine": 112,
+    "cough_medicine": 89,
+    "total_sales": 379
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "fever_medicine": 134,
+    "cold_medicine": 76,
+    "cough_medicine": 54,
+    "total_sales": 264
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "fever_medicine": 98,
+    "cold_medicine": 67,
+    "cough_medicine": 45,
+    "total_sales": 210
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "fever_medicine": 156,
+    "cold_medicine": 89,
+    "cough_medicine": 78,
+    "total_sales": 323
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "fever_medicine": 112,
+    "cold_medicine": 58,
+    "cough_medicine": 43,
+    "total_sales": 213
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Delhi",
+    "city": "New Delhi",
+    "fever_medicine": 123,
+    "cold_medicine": 78,
+    "cough_medicine": 56,
+    "total_sales": 257
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Delhi",
+    "city": "New Delhi",
+    "fever_medicine": 189,
+    "cold_medicine": 134,
+    "cough_medicine": 98,
+    "total_sales": 421
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Delhi",
+    "city": "New Delhi",
+    "fever_medicine": 167,
+    "cold_medicine": 112,
+    "cough_medicine": 87,
+    "total_sales": 366
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "fever_medicine": 89,
+    "cold_medicine": 45,
+    "cough_medicine": 34,
+    "total_sales": 168
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "fever_medicine": 134,
+    "cold_medicine": 78,
+    "cough_medicine": 67,
+    "total_sales": 279
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "fever_medicine": 98,
+    "cold_medicine": 56,
+    "cough_medicine": 42,
+    "total_sales": 196
+  }
+]

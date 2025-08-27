@@ -1,0 +1,110 @@
+[
+  {
+    "date": "2024-01-20",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "opd_visits": 1240,
+    "fever_cases": 187,
+    "respiratory_cases": 143,
+    "total_cases": 1240
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "opd_visits": 1456,
+    "fever_cases": 234,
+    "respiratory_cases": 189,
+    "total_cases": 1456
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "opd_visits": 1189,
+    "fever_cases": 176,
+    "respiratory_cases": 134,
+    "total_cases": 1189
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "opd_visits": 987,
+    "fever_cases": 145,
+    "respiratory_cases": 112,
+    "total_cases": 987
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "opd_visits": 1234,
+    "fever_cases": 198,
+    "respiratory_cases": 156,
+    "total_cases": 1234
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "opd_visits": 1098,
+    "fever_cases": 167,
+    "respiratory_cases": 134,
+    "total_cases": 1098
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Delhi",
+    "city": "New Delhi",
+    "opd_visits": 1567,
+    "fever_cases": 245,
+    "respiratory_cases": 198,
+    "total_cases": 1567
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Delhi",
+    "city": "New Delhi",
+    "opd_visits": 1789,
+    "fever_cases": 298,
+    "respiratory_cases": 234,
+    "total_cases": 1789
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Delhi",
+    "city": "New Delhi",
+    "opd_visits": 1678,
+    "fever_cases": 267,
+    "respiratory_cases": 210,
+    "total_cases": 1678
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "opd_visits": 876,
+    "fever_cases": 123,
+    "respiratory_cases": 98,
+    "total_cases": 876
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "opd_visits": 1045,
+    "fever_cases": 167,
+    "respiratory_cases": 134,
+    "total_cases": 1045
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "opd_visits": 967,
+    "fever_cases": 145,
+    "respiratory_cases": 112,
+    "total_cases": 967
+  }
+]
