@@ -52,6 +52,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				health: {
+					primary: 'hsl(var(--health-primary))',
+					secondary: 'hsl(var(--health-secondary))',
+					warning: 'hsl(var(--health-warning))',
+					danger: 'hsl(var(--health-danger))',
+					safe: 'hsl(var(--health-safe))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -67,6 +74,18 @@ export default {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			backgroundImage: {
+				'gradient-health': 'var(--gradient-health)',
+				'gradient-alert': 'var(--gradient-alert)',
+				'gradient-map': 'var(--gradient-map)'
+			},
+			boxShadow: {
+				'health': 'var(--shadow-health)',
+				'card': 'var(--shadow-card)'
+			},
+			transitionProperty: {
+				'health': 'var(--transition-health)'
 			},
 			keyframes: {
 				'accordion-down': {
