@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 import indiaMapImage from "@/assets/india-map.png";
+import { usePharmacyData, useHospitalData, useSearchTrendData, useSocialMentionData } from "@/lib/data";
+import { calculateRiskScores } from "@/lib/analytics";
+import { CONFIG } from "@/config";
 
 interface Hotspot {
   id: string;
@@ -12,73 +15,78 @@ interface Hotspot {
   confidence: number;
 }
 
-export const IndiaMap = () => {
-  const [hotspots, setHotspots] = useState<Hotspot[]>([
-    {
-      id: "1",
-      state: "Delhi",
-      city: "New Delhi",
-      x: 35,
-      y: 25,
-      severity: "high",
-      disease: "Dengue",
-      confidence: 85
-    },
-    {
-      id: "2",
-      state: "Maharashtra",
-      city: "Mumbai",
-      x: 25,
-      y: 55,
-      severity: "medium",
-      disease: "Malaria",
-      confidence: 72
-    },
-    {
-      id: "3",
-      state: "Maharashtra",
-      city: "Pune",
-      x: 28,
-      y: 58,
-      severity: "critical",
-      disease: "Dengue",
-      confidence: 94
-    },
-    {
-      id: "4",
-      state: "West Bengal",
-      city: "Kolkata",
-      x: 65,
-      y: 45,
-      severity: "medium",
-      disease: "Chikungunya",
-      confidence: 68
-    },
-    {
-      id: "5",
-      state: "Tamil Nadu",
-      city: "Chennai",
-      x: 45,
-      y: 80,
-      severity: "low",
-      disease: "Viral Fever",
-      confidence: 55
-    }
-  ]);
+// City coordinates lookup (approximate positions on India map)
+const cityCoordinates: Record<string, { x: number; y: number }> = {
+  "Mumbai": { x: 25, y: 55 },
+  "Pune": { x: 28, y: 58 },
+  "Nashik": { x: 26, y: 52 },
+  "Nagpur": { x: 35, y: 50 },
+  "Bangalore": { x: 30, y: 75 },
+  "Mysore": { x: 28, y: 78 },
+  "Mangalore": { x: 27, y: 73 },
+  "Hubli": { x: 27, y: 70 },
+  "Delhi": { x: 35, y: 25 },
+  "Gurgaon": { x: 34, y: 27 },
+  "Noida": { x: 36, y: 25 },
+  "Faridabad": { x: 35, y: 28 },
+  "Chennai": { x: 45, y: 80 },
+  "Coimbatore": { x: 30, y: 78 },
+  "Madurai": { x: 32, y: 85 },
+  "Tiruchirappalli": { x: 33, y: 82 }
+};
 
+export const IndiaMap = () => {
+  const { data: pharmacyData } = usePharmacyData();
+  const { data: hospitalData } = useHospitalData();
+  const { data: searchData } = useSearchTrendData();
+  const { data: socialData } = useSocialMentionData();
+  
   const [selectedHotspot, setSelectedHotspot] = useState<Hotspot | null>(null);
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHotspots(prev => prev.map(hotspot => ({
-        ...hotspot,
-        confidence: Math.max(30, Math.min(100, hotspot.confidence + (Math.random() - 0.5) * 10))
-      })));
-    }, 5000);
+  const hotspots = useMemo(() => {
+    if (CONFIG.dataMode === "simulated" || !pharmacyData || !hospitalData || !searchData || !socialData) {
+      // Return simulated hotspots for simulated mode
+      return [
+        { id: "1", state: "Delhi", city: "New Delhi", x: 35, y: 25, severity: "high" as const, disease: "Dengue", confidence: 85 },
+        { id: "2", state: "Maharashtra", city: "Mumbai", x: 25, y: 55, severity: "medium" as const, disease: "Malaria", confidence: 72 },
+        { id: "3", state: "Maharashtra", city: "Pune", x: 28, y: 58, severity: "critical" as const, disease: "Dengue", confidence: 94 },
+        { id: "4", state: "West Bengal", city: "Kolkata", x: 65, y: 45, severity: "medium" as const, disease: "Chikungunya", confidence: 68 },
+        { id: "5", state: "Tamil Nadu", city: "Chennai", x: 45, y: 80, severity: "low" as const, disease: "Viral Fever", confidence: 55 }
+      ];
+    }
 
-    return () => clearInterval(interval);
-  }, []);
+    // Calculate risk scores from real data
+    const riskScores = calculateRiskScores(pharmacyData, hospitalData, searchData, socialData);
+    
+    // Convert risk scores to hotspots
+    return riskScores
+      .filter(risk => risk.score > 30) // Only show significant risks
+      .map((risk, index) => {
+        const coords = cityCoordinates[risk.city] || { x: 30 + Math.random() * 20, y: 50 + Math.random() * 30 };
+        
+        let severity: "low" | "medium" | "high" | "critical";
+        if (risk.score >= 80) severity = "critical";
+        else if (risk.score >= 60) severity = "high";
+        else if (risk.score >= 40) severity = "medium";
+        else severity = "low";
+
+        // Determine primary disease from contributing factors
+        const primaryDisease = risk.factors.length > 0 ? 
+          risk.factors[0].charAt(0).toUpperCase() + risk.factors[0].slice(1) : 
+          "Health Alert";
+
+        return {
+          id: `risk-${index}`,
+          state: risk.state,
+          city: risk.city,
+          x: coords.x,
+          y: coords.y,
+          severity,
+          disease: primaryDisease,
+          confidence: Math.round(risk.confidence)
+        };
+      });
+  }, [pharmacyData, hospitalData, searchData, socialData]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {

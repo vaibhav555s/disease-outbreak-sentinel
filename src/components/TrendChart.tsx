@@ -16,7 +16,7 @@ interface DataPoint {
 export const TrendChart = () => {
   const { data: pharmacyData, isLoading: pharmacyLoading } = usePharmacyData();
   const { data: hospitalData, isLoading: hospitalLoading } = useHospitalData();
-  const { data: searchData, isLoading: searchLoading } = useSocialMentionData();
+  const { data: searchData, isLoading: searchLoading } = useSearchTrendData();
   const { data: socialData, isLoading: socialLoading } = useSocialMentionData();
 
   const isLoading = pharmacyLoading || hospitalLoading || searchLoading || socialLoading;
@@ -63,7 +63,7 @@ export const TrendChart = () => {
       
       const searchSum = searchData
         .filter(d => d.date === date)
-        .reduce((sum, item) => sum + item.health_mentions, 0);
+        .reduce((sum, item) => sum + item.fever + item.dengue + item.malaria + item.cough + item.covid, 0);
       
       const socialSum = socialData
         .filter(d => d.date === date)
