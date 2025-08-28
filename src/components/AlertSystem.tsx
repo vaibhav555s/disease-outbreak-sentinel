@@ -31,8 +31,9 @@ export const AlertSystem = () => {
   // Generate alerts from real data
   const generatedAlerts = useMemo(() => {
     const hasLiveData = pharmacyData && hospitalData && searchData && socialData;
+    const currentMode = CONFIG?.dataMode || "mixed";
 
-    if (CONFIG.dataMode === "simulated" || !hasLiveData) {
+    if (currentMode === "simulated" || !hasLiveData) {
       // Return static alerts for simulated mode using target diseases and cities
       return [
         {
@@ -145,7 +146,7 @@ export const AlertSystem = () => {
             <div className="w-2 h-2 bg-health-danger rounded-full"></div>
           </div>
           <span className="text-sm text-muted-foreground">
-            {CONFIG.dataMode.charAt(0).toUpperCase() + CONFIG.dataMode.slice(1)} monitoring
+            {(CONFIG?.dataMode || "mixed").charAt(0).toUpperCase() + (CONFIG?.dataMode || "mixed").slice(1)} monitoring
           </span>
         </div>
       </div>

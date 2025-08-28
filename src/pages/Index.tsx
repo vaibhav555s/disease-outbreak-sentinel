@@ -2,8 +2,8 @@ import { AgentStatus } from "@/components/AgentStatus";
 import { IndiaMap } from "@/components/IndiaMap";
 import { TrendChart } from "@/components/TrendChart";
 import { AlertSystem } from "@/components/AlertSystem";
-import { DataModeToggle } from "@/components/DataModeToggle";
-import { Activity, Brain, MapPin, TrendingUp, Settings, Database } from "lucide-react";
+import { SimpleDataModeToggle } from "@/components/SimpleDataModeToggle";
+import { Activity, Brain, MapPin, TrendingUp, Settings, Database, Zap } from "lucide-react";
 import { CONFIG } from "@/config";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,12 +30,12 @@ const Index = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Settings className="w-4 h-4 text-muted-foreground" />
-                  <Badge variant={CONFIG.dataMode === "mixed" ? "default" : "secondary"} className="text-xs">
-                    {CONFIG.dataMode === "live" ? "Live Data" :
-                     CONFIG.dataMode === "mixed" ? "Mixed Mode" : "Simulated"}
+                  <Badge variant={(CONFIG?.dataMode || "mixed") === "mixed" ? "default" : "secondary"} className="text-xs">
+                    {(CONFIG?.dataMode || "mixed") === "live" ? "Live Data" :
+                     (CONFIG?.dataMode || "mixed") === "mixed" ? "Mixed Mode" : "Simulated"}
                   </Badge>
                 </div>
-                <DataModeToggle />
+                <SimpleDataModeToggle />
               </div>
               
               <div className="flex items-center gap-2">
@@ -55,12 +55,20 @@ const Index = () => {
                 <span className="text-muted-foreground">3 Active Alerts</span>
               </div>
 
-              <Link to="/data-simulation">
-                <Button variant="outline" size="sm" className="ml-4">
-                  <Database className="w-4 h-4 mr-2" />
-                  Data Lab
-                </Button>
-              </Link>
+              <div className="flex items-center space-x-2 ml-4">
+                <Link to="/data-simulation">
+                  <Button variant="outline" size="sm">
+                    <Database className="w-4 h-4 mr-2" />
+                    Data Lab
+                  </Button>
+                </Link>
+                <Link to="/data-integration">
+                  <Button variant="outline" size="sm">
+                    <Zap className="w-4 h-4 mr-2" />
+                    Integration Hub
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

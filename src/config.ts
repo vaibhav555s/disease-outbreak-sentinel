@@ -1,7 +1,17 @@
 const getDataMode = (): "simulated" | "live" | "mixed" => {
-  // Check localStorage first, then env variable, then default to mixed (recommended demo mode)
-  const stored = localStorage.getItem("dataMode") as "simulated" | "live" | "mixed" | null;
-  if (stored) return stored;
+  // Check if we're in a browser environment
+  if (typeof window === 'undefined') {
+    return "mixed"; // Default for SSR
+  }
+
+  try {
+    // Check localStorage first, then env variable, then default to mixed (recommended demo mode)
+    const stored = localStorage.getItem("dataMode") as "simulated" | "live" | "mixed" | null;
+    if (stored) return stored;
+  } catch (error) {
+    console.warn('localStorage not available:', error);
+  }
+
   return (import.meta.env.VITE_DATA_MODE as "simulated" | "live" | "mixed") || "mixed";
 };
 

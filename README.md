@@ -157,3 +157,60 @@ date,medicine_name,category,quantity_sold,city,state
 
 ### Integration with Dashboard
 When in **Simulated** or **Mixed** mode, the dashboard automatically uses generated synthetic data that follows the same patterns as the Data Lab, ensuring consistency across the application.
+
+## 🔗 **Data Integration Hub**
+
+### Overview
+The Data Integration Hub provides advanced multi-source data fusion capabilities, combining simulated clinical data with live Google Trends and social media streams in real-time.
+
+### Key Features
+
+#### **🎯 Standardized Data Schema**
+All data sources are transformed to a unified format:
+```typescript
+interface HealthDataPoint {
+  timestamp: string;    // ISO 8601 format
+  location: string;     // City or region
+  disease: string;      // Disease type (fever, dengue, etc.)
+  source: 'hospital' | 'pharmacy' | 'trends' | 'social';
+  value: number;        // Normalized value (0-100)
+  metadata?: {          // Additional source-specific data
+    confidence?: number;
+    rawValue?: number;
+    unit?: string;
+  };
+}
+```
+
+#### **⚡ Real-time Data Merging**
+- **Deduplication**: Automatic merging based on `timestamp + location + disease`
+- **Weighted Averaging**: Configurable source weights for intelligent fusion
+- **Conflict Resolution**: Smart handling of overlapping data points
+
+#### **🔧 Three Operational Modes**
+
+**1. Simulated Mode**
+- All data sources use realistic synthetic data
+- Perfect for development and testing
+- Includes built-in outbreak patterns
+
+**2. Live Mode**
+- Only Google Trends and Social Media data
+- Real-time API connections
+- Clinical charts hidden/greyed out
+
+**3. Mixed Mode** *(Recommended)*
+- Simulated clinical data + Live trends/social
+- Best of both worlds for demos
+- Full dashboard functionality
+
+#### **📊 Advanced Configuration**
+- **Source Weights**: Hospital (35%), Pharmacy (40%), Trends (15%), Social (10%)
+- **Refresh Intervals**: Configurable per source (30s-60s)
+- **Real-time Updates**: Automatic data streaming with error handling
+- **Filter & Search**: Advanced filtering by location, disease, source, date range
+
+### Usage
+Navigate to `/data-integration` or click "Integration Hub" in the main dashboard for the complete multi-source data fusion experience.
+
+The Integration Hub provides a production-ready foundation for multi-source health data fusion with enterprise-grade reliability and performance!

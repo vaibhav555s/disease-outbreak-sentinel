@@ -23,10 +23,11 @@ export const TrendChart = () => {
 
   const chartData = useMemo(() => {
     // Handle different modes according to new logic
-    const shouldShowClinicalData = CONFIG.dataMode !== "live";
+    const currentMode = CONFIG?.dataMode || "mixed";
+    const shouldShowClinicalData = currentMode !== "live";
     const hasLiveData = pharmacyData && hospitalData && searchData && socialData;
 
-    if (CONFIG.dataMode === "simulated" || !hasLiveData) {
+    if (currentMode === "simulated" || !hasLiveData) {
       // Generate simulated data for simulated mode or when no data is available
       const today = new Date();
       const simulatedData: DataPoint[] = [];
@@ -113,7 +114,8 @@ export const TrendChart = () => {
     );
   }
 
-  const shouldShowClinicalData = CONFIG.dataMode !== "live";
+  const currentMode = CONFIG?.dataMode || "mixed";
+  const shouldShowClinicalData = currentMode !== "live";
   const modeDescription = {
     simulated: "Simulated data across all sources",
     live: "Live trends & social data only",
@@ -125,7 +127,7 @@ export const TrendChart = () => {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-card-foreground mb-2">Multi-Source Health Signals</h3>
         <p className="text-sm text-muted-foreground">
-          {modeDescription[CONFIG.dataMode]}
+          {modeDescription[currentMode]}
         </p>
         {!shouldShowClinicalData && (
           <p className="text-xs text-muted-foreground mt-1 italic">

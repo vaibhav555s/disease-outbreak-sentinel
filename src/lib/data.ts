@@ -59,10 +59,12 @@ const fetchData = async <T>(endpoint: string): Promise<T[]> => {
   const isClinicData = endpoint === "pharmacy" || endpoint === "hospital";
   const isTrendSocialData = endpoint === "trends" || endpoint === "social";
 
-  if (CONFIG.dataMode === "simulated") {
+  const currentMode = CONFIG?.dataMode || "mixed";
+
+  if (currentMode === "simulated") {
     // All simulated data - generate realistic synthetic data
     return generateSimulatedData<T>(endpoint);
-  } else if (CONFIG.dataMode === "live") {
+  } else if (currentMode === "live") {
     if (isClinicData) {
       // Live mode: hide clinical data
       return [];
@@ -76,7 +78,7 @@ const fetchData = async <T>(endpoint: string): Promise<T[]> => {
       console.warn(`Live data not available for ${endpoint}, using simulated fallback`);
       return [];
     }
-  } else if (CONFIG.dataMode === "mixed") {
+  } else if (currentMode === "mixed") {
     if (isClinicData) {
       // Mixed mode: use simulated clinical data
       return generateSimulatedData<T>(endpoint);
@@ -99,7 +101,7 @@ const fetchData = async <T>(endpoint: string): Promise<T[]> => {
 const generateSimulatedData = <T extends PharmacyData | HospitalData | SearchTrendData | SocialMentionData>(
   endpoint: string
 ): T[] => {
-  const cities = CONFIG.targetCities;
+  const cities = CONFIG?.targetCities || ["Mumbai", "Delhi", "Pune", "Bengaluru", "Chennai", "Kolkata"];
   const data: T[] = [];
 
   if (endpoint === "pharmacy") {
@@ -188,7 +190,7 @@ export const usePharmacyData = () => {
   return useQuery({
     queryKey: ["pharmacy-data"],
     queryFn: () => fetchData<PharmacyData>("pharmacy"),
-    refetchInterval: CONFIG.polling.interval,
+    refetchInterval: CONFIG?.polling?.interval || 30000,
     staleTime: 2000,
   });
 };
