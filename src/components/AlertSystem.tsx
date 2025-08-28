@@ -30,8 +30,10 @@ export const AlertSystem = () => {
 
   // Generate alerts from real data
   const generatedAlerts = useMemo(() => {
-    if (CONFIG.dataMode === "simulated" || !pharmacyData || !hospitalData || !searchData || !socialData) {
-      // Return static alerts for simulated mode
+    const hasLiveData = pharmacyData && hospitalData && searchData && socialData;
+
+    if (CONFIG.dataMode === "simulated" || !hasLiveData) {
+      // Return static alerts for simulated mode using target diseases and cities
       return [
         {
           id: "sim-1",
@@ -40,7 +42,7 @@ export const AlertSystem = () => {
           disease: "Dengue",
           location: "Pune, Maharashtra",
           confidence: 94,
-          description: "Dengue outbreak predicted based on pharmacy sales spike (fever medicines +35%), increased hospital OPD visits, and rising Google searches for 'dengue symptoms'",
+          description: "Dengue outbreak predicted based on pharmacy sales spike (dengue medicines +35%), increased hospital OPD visits, and rising Google searches for 'dengue symptoms'",
           timestamp: new Date(Date.now() - 5 * 60 * 1000),
           acknowledged: false,
           estimatedDays: 3
@@ -49,10 +51,10 @@ export const AlertSystem = () => {
           id: "sim-2",
           type: "anomaly" as const,
           severity: "high" as const,
-          disease: "Fever Pattern",
-          location: "Delhi NCR",
+          disease: "Diarrhea",
+          location: "Kolkata, West Bengal",
           confidence: 85,
-          description: "Unusual spike in fever medication sales detected. 20% increase from baseline over the past 3 days",
+          description: "Unusual spike in diarrhea medication sales detected. 20% increase from baseline over the past 3 days",
           timestamp: new Date(Date.now() - 15 * 60 * 1000),
           acknowledged: false,
           estimatedDays: 2
@@ -61,13 +63,25 @@ export const AlertSystem = () => {
           id: "sim-3",
           type: "correlation" as const,
           severity: "medium" as const,
-          disease: "Viral Fever",
+          disease: "Flu",
           location: "Chennai, Tamil Nadu",
           confidence: 72,
-          description: "Correlation detected between social media mentions and hospital visit patterns",
+          description: "Correlation detected between social media mentions and flu-related hospital visits",
           timestamp: new Date(Date.now() - 45 * 60 * 1000),
           acknowledged: true,
           estimatedDays: 5
+        },
+        {
+          id: "sim-4",
+          type: "trend" as const,
+          severity: "medium" as const,
+          disease: "Malaria",
+          location: "Mumbai, Maharashtra",
+          confidence: 78,
+          description: "Rising search trends for malaria symptoms detected in Mumbai region",
+          timestamp: new Date(Date.now() - 25 * 60 * 1000),
+          acknowledged: false,
+          estimatedDays: 4
         }
       ];
     }
@@ -131,7 +145,7 @@ export const AlertSystem = () => {
             <div className="w-2 h-2 bg-health-danger rounded-full"></div>
           </div>
           <span className="text-sm text-muted-foreground">
-            {CONFIG.dataMode === "simulated" ? "Simulated" : "Live"} monitoring
+            {CONFIG.dataMode.charAt(0).toUpperCase() + CONFIG.dataMode.slice(1)} monitoring
           </span>
         </div>
       </div>

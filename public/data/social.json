@@ -94,5 +94,29 @@
     "health_mentions": 34,
     "disease_mentions": 17,
     "sentiment_score": 0.4
+  },
+  {
+    "date": "2024-01-20",
+    "state": "West Bengal",
+    "platform": "twitter",
+    "health_mentions": 52,
+    "disease_mentions": 26,
+    "sentiment_score": 0.2
+  },
+  {
+    "date": "2024-01-21",
+    "state": "West Bengal",
+    "platform": "twitter",
+    "health_mentions": 67,
+    "disease_mentions": 34,
+    "sentiment_score": 0.0
+  },
+  {
+    "date": "2024-01-22",
+    "state": "West Bengal",
+    "platform": "twitter",
+    "health_mentions": 59,
+    "disease_mentions": 29,
+    "sentiment_score": 0.1
   }
 ]

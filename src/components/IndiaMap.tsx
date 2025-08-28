@@ -15,24 +15,14 @@ interface Hotspot {
   confidence: number;
 }
 
-// City coordinates lookup (approximate positions on India map)
+// City coordinates lookup for target cities only (approximate positions on India map)
 const cityCoordinates: Record<string, { x: number; y: number }> = {
   "Mumbai": { x: 25, y: 55 },
-  "Pune": { x: 28, y: 58 },
-  "Nashik": { x: 26, y: 52 },
-  "Nagpur": { x: 35, y: 50 },
-  "Bangalore": { x: 30, y: 75 },
-  "Mysore": { x: 28, y: 78 },
-  "Mangalore": { x: 27, y: 73 },
-  "Hubli": { x: 27, y: 70 },
   "Delhi": { x: 35, y: 25 },
-  "Gurgaon": { x: 34, y: 27 },
-  "Noida": { x: 36, y: 25 },
-  "Faridabad": { x: 35, y: 28 },
+  "Pune": { x: 28, y: 58 },
+  "Bengaluru": { x: 30, y: 75 },
   "Chennai": { x: 45, y: 80 },
-  "Coimbatore": { x: 30, y: 78 },
-  "Madurai": { x: 32, y: 85 },
-  "Tiruchirappalli": { x: 33, y: 82 }
+  "Kolkata": { x: 65, y: 45 }
 };
 
 export const IndiaMap = () => {
@@ -45,13 +35,14 @@ export const IndiaMap = () => {
 
   const hotspots = useMemo(() => {
     if (CONFIG.dataMode === "simulated" || !pharmacyData || !hospitalData || !searchData || !socialData) {
-      // Return simulated hotspots for simulated mode
+      // Return simulated hotspots for simulated mode using target cities and diseases
       return [
-        { id: "1", state: "Delhi", city: "New Delhi", x: 35, y: 25, severity: "high" as const, disease: "Dengue", confidence: 85 },
+        { id: "1", state: "Delhi", city: "Delhi", x: 35, y: 25, severity: "high" as const, disease: "Dengue", confidence: 85 },
         { id: "2", state: "Maharashtra", city: "Mumbai", x: 25, y: 55, severity: "medium" as const, disease: "Malaria", confidence: 72 },
         { id: "3", state: "Maharashtra", city: "Pune", x: 28, y: 58, severity: "critical" as const, disease: "Dengue", confidence: 94 },
-        { id: "4", state: "West Bengal", city: "Kolkata", x: 65, y: 45, severity: "medium" as const, disease: "Chikungunya", confidence: 68 },
-        { id: "5", state: "Tamil Nadu", city: "Chennai", x: 45, y: 80, severity: "low" as const, disease: "Viral Fever", confidence: 55 }
+        { id: "4", state: "West Bengal", city: "Kolkata", x: 65, y: 45, severity: "medium" as const, disease: "Diarrhea", confidence: 68 },
+        { id: "5", state: "Tamil Nadu", city: "Chennai", x: 45, y: 80, severity: "low" as const, disease: "Flu", confidence: 55 },
+        { id: "6", state: "Karnataka", city: "Bengaluru", x: 30, y: 75, severity: "medium" as const, disease: "Fever", confidence: 78 }
       ];
     }
 

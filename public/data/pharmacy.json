@@ -4,107 +4,215 @@
     "state": "Maharashtra",
     "city": "Mumbai",
     "fever_medicine": 145,
-    "cold_medicine": 89,
     "cough_medicine": 67,
-    "total_sales": 301
+    "diarrhea_medicine": 34,
+    "dengue_medicine": 23,
+    "malaria_medicine": 18,
+    "flu_medicine": 89,
+    "total_sales": 376
   },
   {
     "date": "2024-01-21",
     "state": "Maharashtra",
     "city": "Mumbai",
     "fever_medicine": 178,
-    "cold_medicine": 112,
     "cough_medicine": 89,
-    "total_sales": 379
+    "diarrhea_medicine": 42,
+    "dengue_medicine": 31,
+    "malaria_medicine": 24,
+    "flu_medicine": 112,
+    "total_sales": 476
   },
   {
     "date": "2024-01-22",
     "state": "Maharashtra",
     "city": "Mumbai",
     "fever_medicine": 134,
-    "cold_medicine": 76,
     "cough_medicine": 54,
-    "total_sales": 264
+    "diarrhea_medicine": 28,
+    "dengue_medicine": 19,
+    "malaria_medicine": 15,
+    "flu_medicine": 76,
+    "total_sales": 326
   },
   {
     "date": "2024-01-20",
     "state": "Karnataka",
-    "city": "Bangalore",
+    "city": "Bengaluru",
     "fever_medicine": 98,
-    "cold_medicine": 67,
     "cough_medicine": 45,
-    "total_sales": 210
+    "diarrhea_medicine": 23,
+    "dengue_medicine": 16,
+    "malaria_medicine": 12,
+    "flu_medicine": 67,
+    "total_sales": 261
   },
   {
     "date": "2024-01-21",
     "state": "Karnataka",
-    "city": "Bangalore",
+    "city": "Bengaluru",
     "fever_medicine": 156,
-    "cold_medicine": 89,
     "cough_medicine": 78,
-    "total_sales": 323
+    "diarrhea_medicine": 31,
+    "dengue_medicine": 22,
+    "malaria_medicine": 17,
+    "flu_medicine": 89,
+    "total_sales": 393
   },
   {
     "date": "2024-01-22",
     "state": "Karnataka",
-    "city": "Bangalore",
+    "city": "Bengaluru",
     "fever_medicine": 112,
-    "cold_medicine": 58,
     "cough_medicine": 43,
-    "total_sales": 213
-  },
-  {
-    "date": "2024-01-20",
-    "state": "Delhi",
-    "city": "New Delhi",
-    "fever_medicine": 123,
-    "cold_medicine": 78,
-    "cough_medicine": 56,
+    "diarrhea_medicine": 19,
+    "dengue_medicine": 14,
+    "malaria_medicine": 11,
+    "flu_medicine": 58,
     "total_sales": 257
   },
   {
+    "date": "2024-01-20",
+    "state": "Delhi",
+    "city": "Delhi",
+    "fever_medicine": 123,
+    "cough_medicine": 56,
+    "diarrhea_medicine": 28,
+    "dengue_medicine": 19,
+    "malaria_medicine": 15,
+    "flu_medicine": 78,
+    "total_sales": 319
+  },
+  {
     "date": "2024-01-21",
     "state": "Delhi",
-    "city": "New Delhi",
+    "city": "Delhi",
     "fever_medicine": 189,
-    "cold_medicine": 134,
     "cough_medicine": 98,
-    "total_sales": 421
+    "diarrhea_medicine": 45,
+    "dengue_medicine": 32,
+    "malaria_medicine": 25,
+    "flu_medicine": 134,
+    "total_sales": 523
   },
   {
     "date": "2024-01-22",
     "state": "Delhi",
-    "city": "New Delhi",
+    "city": "Delhi",
     "fever_medicine": 167,
-    "cold_medicine": 112,
     "cough_medicine": 87,
-    "total_sales": 366
+    "diarrhea_medicine": 38,
+    "dengue_medicine": 27,
+    "malaria_medicine": 21,
+    "flu_medicine": 112,
+    "total_sales": 452
   },
   {
     "date": "2024-01-20",
     "state": "Tamil Nadu",
     "city": "Chennai",
     "fever_medicine": 89,
-    "cold_medicine": 45,
     "cough_medicine": 34,
-    "total_sales": 168
+    "diarrhea_medicine": 17,
+    "dengue_medicine": 12,
+    "malaria_medicine": 9,
+    "flu_medicine": 45,
+    "total_sales": 206
   },
   {
     "date": "2024-01-21",
     "state": "Tamil Nadu",
     "city": "Chennai",
     "fever_medicine": 134,
-    "cold_medicine": 78,
     "cough_medicine": 67,
-    "total_sales": 279
+    "diarrhea_medicine": 28,
+    "dengue_medicine": 19,
+    "malaria_medicine": 15,
+    "flu_medicine": 78,
+    "total_sales": 341
   },
   {
     "date": "2024-01-22",
     "state": "Tamil Nadu",
     "city": "Chennai",
     "fever_medicine": 98,
-    "cold_medicine": 56,
     "cough_medicine": 42,
-    "total_sales": 196
+    "diarrhea_medicine": 21,
+    "dengue_medicine": 14,
+    "malaria_medicine": 11,
+    "flu_medicine": 56,
+    "total_sales": 242
+  },
+  {
+    "date": "2024-01-20",
+    "state": "Maharashtra",
+    "city": "Pune",
+    "fever_medicine": 76,
+    "cough_medicine": 43,
+    "diarrhea_medicine": 19,
+    "dengue_medicine": 14,
+    "malaria_medicine": 11,
+    "flu_medicine": 56,
+    "total_sales": 219
+  },
+  {
+    "date": "2024-01-21",
+    "state": "Maharashtra",
+    "city": "Pune",
+    "fever_medicine": 112,
+    "cough_medicine": 67,
+    "diarrhea_medicine": 31,
+    "dengue_medicine": 22,
+    "malaria_medicine": 17,
+    "flu_medicine": 89,
+    "total_sales": 338
+  },
+  {
+    "date": "2024-01-22",
+    "state": "Maharashtra",
+    "city": "Pune",
+    "fever_medicine": 89,
+    "cough_medicine": 54,
+    "diarrhea_medicine": 24,
+    "dengue_medicine": 17,
+    "malaria_medicine": 13,
+    "flu_medicine": 67,
+    "total_sales": 264
+  },
+  {
+    "date": "2024-01-20",
+    "state": "West Bengal",
+    "city": "Kolkata",
+    "fever_medicine": 67,
+    "cough_medicine": 38,
+    "diarrhea_medicine": 24,
+    "dengue_medicine": 16,
+    "malaria_medicine": 12,
+    "flu_medicine": 45,
+    "total_sales": 202
+  },
+  {
+    "date": "2024-01-21",
+    "state": "West Bengal",
+    "city": "Kolkata",
+    "fever_medicine": 98,
+    "cough_medicine": 56,
+    "diarrhea_medicine": 34,
+    "dengue_medicine": 23,
+    "malaria_medicine": 18,
+    "flu_medicine": 67,
+    "total_sales": 296
+  },
+  {
+    "date": "2024-01-22",
+    "state": "West Bengal",
+    "city": "Kolkata",
+    "fever_medicine": 78,
+    "cough_medicine": 45,
+    "diarrhea_medicine": 28,
+    "dengue_medicine": 19,
+    "malaria_medicine": 15,
+    "flu_medicine": 54,
+    "total_sales": 239
   }
 ]

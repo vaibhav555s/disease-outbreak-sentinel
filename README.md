@@ -1,4 +1,10 @@
-# Welcome to your Lovable project
+# Agentic AI for Smart Health Surveillance
+
+A sophisticated React-based web application that implements an Agentic AI system for early disease outbreak detection in India. The system uses multiple AI agents to analyze pharmacy sales, hospital records, Google Trends, and social media data to predict disease outbreaks before they spread.
+
+## 🎯 Project Overview
+
+This system monitors 6 target cities (Mumbai, Delhi, Pune, Bengaluru, Chennai, Kolkata) for 6 key diseases/signals (fever, cough, diarrhea, dengue, malaria, flu) using a multi-agent AI architecture.
 
 ## Project info
 
@@ -52,13 +58,42 @@ npm run dev
 
 ## What technologies are used for this project?
 
-This project is built with:
+## 🚀 Key Features
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### 🤖 Multi-Agent AI Architecture
+- **Data Collector Agent**: Fetches pharmacy sales, hospital records & social signals
+- **Cleaner & Normalizer Agent**: Standardizes time-series data and removes outliers
+- **Trend Detector Agent**: Analyzes statistical patterns and anomalies
+- **Predictor Agent**: Runs ML forecasts and risk correlation
+- **Alert Generator Agent**: Produces early warning signals with confidence scores
+
+### 📊 Three Operational Modes
+- **Simulated**: All synthetic data with realistic outbreak patterns
+- **Live**: Only live Google Trends & Social Media data
+- **Mixed**: Simulated clinical + Live trends/social (**Recommended for demos**)
+
+### 🗺️ Interactive Dashboard
+- Real-time India map with disease hotspots
+- Multi-source trend visualization
+- Smart alert system with explainable AI
+- Agent status monitoring
+- Confidence scoring and risk assessment
+
+### 🧪 Data Simulation Lab
+- Generate realistic synthetic hospital and pharmacy datasets
+- Built-in outbreak patterns (days 10-15)
+- CSV export functionality
+- Supports all 6 target cities and diseases
+- Perfect for testing anomaly detection algorithms
+
+## 🛠️ Technologies Used
+
+- **Frontend**: React 18 + TypeScript + Vite
+- **UI Components**: shadcn/ui + Tailwind CSS
+- **Data Visualization**: Recharts
+- **State Management**: TanStack Query
+- **Routing**: React Router
+- **Styling**: Tailwind CSS with custom health theme
 
 ## How can I deploy this project?
 
@@ -71,3 +106,54 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## 🧪 Data Simulation Lab
+
+### Overview
+The Data Simulation Lab allows you to generate realistic synthetic datasets for testing and development. Access it via the "Data Lab" button in the main dashboard header.
+
+### Features
+- **Hospital Data Generation**: Patient records with symptoms, diagnosis, demographics
+- **Pharmacy Data Generation**: Medicine sales with categories and quantities
+- **Outbreak Simulation**: Built-in outbreak patterns on days 10-15
+- **Multi-City Support**: Generate data for all 6 target cities
+- **CSV Export**: Automatic download of generated datasets
+
+### Dataset Structure
+
+#### Hospital Data
+```csv
+date,patient_id,symptoms,diagnosis,age,gender,city,state
+2024-01-20,P20240120001,"fever;headache",Fever,34,Male,Mumbai,Maharashtra
+```
+
+#### Pharmacy Data
+```csv
+date,medicine_name,category,quantity_sold,city,state
+2024-01-20,paracetamol,fever_medicine,45,Mumbai,Maharashtra
+```
+
+### Usage Instructions
+
+1. **Navigate to Data Lab**: Click "Data Lab" button in the main dashboard
+2. **Configure Generation**:
+   - Select target city or choose "All Cities"
+   - Set number of days (7-90, default: 30)
+3. **Generate Data**: Click generate button
+4. **Download**: CSV files automatically download to your device
+
+### Outbreak Patterns
+- **Days 1-9**: Normal baseline rates
+- **Days 10-15**: Outbreak simulation (2-8x increase in cases)
+- **Days 16+**: Return to baseline with some residual effects
+
+### Disease Base Rates
+- Fever: 30% base rate
+- Cough: 25% base rate
+- Flu: 20% base rate
+- Diarrhea: 15% base rate
+- Malaria: 8% base rate
+- Dengue: 5% base rate
+
+### Integration with Dashboard
+When in **Simulated** or **Mixed** mode, the dashboard automatically uses generated synthetic data that follows the same patterns as the Data Lab, ensuring consistency across the application.

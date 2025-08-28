@@ -3,108 +3,150 @@
     "date": "2024-01-20",
     "state": "Maharashtra",
     "fever": 67,
+    "cough": 45,
+    "diarrhea": 23,
     "dengue": 34,
     "malaria": 23,
-    "cough": 45,
-    "covid": 12
+    "flu": 12
   },
   {
     "date": "2024-01-21",
     "state": "Maharashtra",
     "fever": 89,
+    "cough": 67,
+    "diarrhea": 31,
     "dengue": 45,
     "malaria": 31,
-    "cough": 67,
-    "covid": 18
+    "flu": 18
   },
   {
     "date": "2024-01-22",
     "state": "Maharashtra",
     "fever": 78,
+    "cough": 56,
+    "diarrhea": 27,
     "dengue": 38,
     "malaria": 27,
-    "cough": 56,
-    "covid": 15
+    "flu": 15
   },
   {
     "date": "2024-01-20",
     "state": "Karnataka",
     "fever": 45,
+    "cough": 34,
+    "diarrhea": 17,
     "dengue": 23,
     "malaria": 17,
-    "cough": 34,
-    "covid": 9
+    "flu": 9
   },
   {
     "date": "2024-01-21",
     "state": "Karnataka",
     "fever": 67,
+    "cough": 48,
+    "diarrhea": 24,
     "dengue": 32,
     "malaria": 24,
-    "cough": 48,
-    "covid": 14
+    "flu": 14
   },
   {
     "date": "2024-01-22",
     "state": "Karnataka",
     "fever": 56,
+    "cough": 41,
+    "diarrhea": 21,
     "dengue": 28,
     "malaria": 21,
-    "cough": 41,
-    "covid": 12
+    "flu": 12
   },
   {
     "date": "2024-01-20",
     "state": "Delhi",
     "fever": 89,
+    "cough": 67,
+    "diarrhea": 28,
     "dengue": 42,
     "malaria": 28,
-    "cough": 67,
-    "covid": 21
+    "flu": 21
   },
   {
     "date": "2024-01-21",
     "state": "Delhi",
     "fever": 112,
+    "cough": 84,
+    "diarrhea": 38,
     "dengue": 56,
     "malaria": 38,
-    "cough": 84,
-    "covid": 28
+    "flu": 28
   },
   {
     "date": "2024-01-22",
     "state": "Delhi",
     "fever": 98,
+    "cough": 73,
+    "diarrhea": 33,
     "dengue": 49,
     "malaria": 33,
-    "cough": 73,
-    "covid": 24
+    "flu": 24
   },
   {
     "date": "2024-01-20",
     "state": "Tamil Nadu",
     "fever": 34,
+    "cough": 26,
+    "diarrhea": 12,
     "dengue": 18,
     "malaria": 12,
-    "cough": 26,
-    "covid": 7
+    "flu": 7
   },
   {
     "date": "2024-01-21",
     "state": "Tamil Nadu",
     "fever": 52,
+    "cough": 38,
+    "diarrhea": 19,
     "dengue": 27,
     "malaria": 19,
-    "cough": 38,
-    "covid": 11
+    "flu": 11
   },
   {
     "date": "2024-01-22",
     "state": "Tamil Nadu",
     "fever": 43,
+    "cough": 32,
+    "diarrhea": 15,
     "dengue": 22,
     "malaria": 15,
-    "cough": 32,
-    "covid": 9
+    "flu": 9
+  },
+  {
+    "date": "2024-01-20",
+    "state": "West Bengal",
+    "fever": 56,
+    "cough": 42,
+    "diarrhea": 28,
+    "dengue": 31,
+    "malaria": 19,
+    "flu": 14
+  },
+  {
+    "date": "2024-01-21",
+    "state": "West Bengal",
+    "fever": 73,
+    "cough": 58,
+    "diarrhea": 35,
+    "dengue": 41,
+    "malaria": 26,
+    "flu": 18
+  },
+  {
+    "date": "2024-01-22",
+    "state": "West Bengal",
+    "fever": 64,
+    "cough": 49,
+    "diarrhea": 31,
+    "dengue": 36,
+    "malaria": 22,
+    "flu": 16
   }
 ]

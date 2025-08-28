@@ -47,10 +47,12 @@ export const AgentStatus = () => {
       
       setAgentProgress(prev => {
         const newProgress = {
-          collector: CONFIG.dataMode === "simulated" ? 
+          collector: CONFIG.dataMode === "simulated" ?
             Math.min(100, prev.collector + Math.random() * 3) :
-            (!pharmacyLoading && !hospitalLoading && !searchLoading && !socialLoading) ? 100 : 
-            Math.min(95, prev.collector + Math.random() * 5),
+            CONFIG.dataMode === "live" ?
+            (!searchLoading && !socialLoading) ? 100 : Math.min(95, prev.collector + Math.random() * 5) :
+            // Mixed mode
+            (!searchLoading && !socialLoading) ? 100 : Math.min(95, prev.collector + Math.random() * 5),
           normalizer: Math.min(100, prev.normalizer + Math.random() * 2),
           detector: Math.min(100, prev.detector + Math.random() * 2.5),
           predictor: Math.min(100, prev.predictor + Math.random() * 1.5),
@@ -100,9 +102,11 @@ export const AgentStatus = () => {
       status: (pharmacyError || hospitalError || searchError || socialError) ? "error" :
         (pharmacyLoading || hospitalLoading || searchLoading || socialLoading) ? "processing" : "active",
       icon: <Database className="w-4 h-4" />,
-      description: CONFIG.dataMode === "simulated" ? 
+      description: CONFIG.dataMode === "simulated" ?
         "Generating simulated data streams" :
-        "Fetching pharmacy sales, hospital records & social signals",
+        CONFIG.dataMode === "live" ?
+        "Fetching live trends & social signals only" :
+        "Mixed: Simulated clinical + live trends/social",
       lastUpdate: formatTimeAgo(lastUpdateTimes.current.collector),
       progress: agentProgress.collector
     },

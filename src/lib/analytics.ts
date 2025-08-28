@@ -172,7 +172,7 @@ export const calculateRiskScores = (
     // Search trends (15% weight)
     if (searchItems.length > 0) {
       const latest = searchItems[searchItems.length - 1];
-      const totalSearches = latest.fever + latest.dengue + latest.malaria + latest.cough + latest.covid;
+      const totalSearches = latest.fever + latest.cough + latest.diarrhea + latest.dengue + latest.malaria + latest.flu;
       if (totalSearches > 50) {
         score += 0.15;
         factors.push("High search activity");
@@ -211,8 +211,8 @@ export const generateAlerts = (riskScores: RiskScore[], anomalies: Anomaly[]): A
   // High-risk locations
   riskScores.filter(score => score.score > 0.6).forEach((score, index) => {
     const severity = score.score > 0.8 ? "critical" : score.score > 0.7 ? "high" : "medium";
-    const diseases = ["Dengue", "Malaria", "Respiratory Infection", "Viral Fever"];
-    
+    const diseases = ["Dengue", "Malaria", "Diarrhea", "Flu", "Fever", "Cough"];
+
     alerts.push({
       id: `risk-${index}`,
       type: "outbreak",

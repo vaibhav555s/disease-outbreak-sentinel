@@ -3,9 +3,11 @@ import { IndiaMap } from "@/components/IndiaMap";
 import { TrendChart } from "@/components/TrendChart";
 import { AlertSystem } from "@/components/AlertSystem";
 import { DataModeToggle } from "@/components/DataModeToggle";
-import { Activity, Brain, MapPin, TrendingUp, Settings } from "lucide-react";
+import { Activity, Brain, MapPin, TrendingUp, Settings, Database } from "lucide-react";
 import { CONFIG } from "@/config";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -28,8 +30,9 @@ const Index = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Settings className="w-4 h-4 text-muted-foreground" />
-                  <Badge variant={CONFIG.dataMode === "live" ? "default" : "secondary"} className="text-xs">
-                    {CONFIG.dataMode === "live" ? "Live Data" : "Simulated"}
+                  <Badge variant={CONFIG.dataMode === "mixed" ? "default" : "secondary"} className="text-xs">
+                    {CONFIG.dataMode === "live" ? "Live Data" :
+                     CONFIG.dataMode === "mixed" ? "Mixed Mode" : "Simulated"}
                   </Badge>
                 </div>
                 <DataModeToggle />
@@ -51,6 +54,13 @@ const Index = () => {
                 <MapPin className="w-4 h-4 text-health-warning" />
                 <span className="text-muted-foreground">3 Active Alerts</span>
               </div>
+
+              <Link to="/data-simulation">
+                <Button variant="outline" size="sm" className="ml-4">
+                  <Database className="w-4 h-4 mr-2" />
+                  Data Lab
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

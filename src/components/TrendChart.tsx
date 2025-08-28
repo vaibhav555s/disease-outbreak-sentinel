@@ -22,26 +22,30 @@ export const TrendChart = () => {
   const isLoading = pharmacyLoading || hospitalLoading || searchLoading || socialLoading;
 
   const chartData = useMemo(() => {
-    if (CONFIG.dataMode === "simulated" || !pharmacyData || !hospitalData || !searchData || !socialData) {
+    // Handle different modes according to new logic
+    const shouldShowClinicalData = CONFIG.dataMode !== "live";
+    const hasLiveData = pharmacyData && hospitalData && searchData && socialData;
+
+    if (CONFIG.dataMode === "simulated" || !hasLiveData) {
       // Generate simulated data for simulated mode or when no data is available
       const today = new Date();
       const simulatedData: DataPoint[] = [];
-      
+
       for (let i = 14; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        
+
         const baseValue = Math.sin(i * 0.3) * 20 + 50 + Math.random() * 10;
-        
+
         simulatedData.push({
           date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          pharmacy: Math.max(0, baseValue + Math.random() * 20),
-          hospital: Math.max(0, baseValue * 0.8 + Math.random() * 15),
+          pharmacy: shouldShowClinicalData ? Math.max(0, baseValue + Math.random() * 20) : 0,
+          hospital: shouldShowClinicalData ? Math.max(0, baseValue * 0.8 + Math.random() * 15) : 0,
           searches: Math.max(0, baseValue * 1.2 + Math.random() * 25),
           social: Math.max(0, baseValue * 0.6 + Math.random() * 30)
         });
       }
-      
+
       return simulatedData;
     }
 
@@ -63,7 +67,7 @@ export const TrendChart = () => {
       
       const searchSum = searchData
         .filter(d => d.date === date)
-        .reduce((sum, item) => sum + item.fever + item.dengue + item.malaria + item.cough + item.covid, 0);
+        .reduce((sum, item) => sum + item.fever + item.cough + item.diarrhea + item.dengue + item.malaria + item.flu, 0);
       
       const socialSum = socialData
         .filter(d => d.date === date)
@@ -109,13 +113,25 @@ export const TrendChart = () => {
     );
   }
 
+  const shouldShowClinicalData = CONFIG.dataMode !== "live";
+  const modeDescription = {
+    simulated: "Simulated data across all sources",
+    live: "Live trends & social data only",
+    mixed: "Mixed: Simulated clinical + Live trends/social"
+  };
+
   return (
-    <Card className="p-6 bg-card border-border shadow-card">
+    <Card className={`p-6 bg-card border-border shadow-card ${!shouldShowClinicalData ? 'opacity-75' : ''}`}>
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-card-foreground mb-2">Multi-Source Health Signals</h3>
         <p className="text-sm text-muted-foreground">
-          {CONFIG.dataMode === "simulated" ? "Simulated" : "Real-time"} correlation analysis across data sources
+          {modeDescription[CONFIG.dataMode]}
         </p>
+        {!shouldShowClinicalData && (
+          <p className="text-xs text-muted-foreground mt-1 italic">
+            Clinical data (pharmacy/hospital) hidden in Live mode
+          </p>
+        )}
       </div>
       
       <ResponsiveContainer width="100%" height={300}>
@@ -132,34 +148,38 @@ export const TrendChart = () => {
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend />
-          <Line 
-            type="monotone" 
-            dataKey="pharmacy" 
-            stroke="hsl(var(--health-primary))" 
-            strokeWidth={2}
-            dot={{ fill: "hsl(var(--health-primary))", strokeWidth: 2, r: 4 }}
-            name="Pharmacy Sales"
-          />
-          <Line 
-            type="monotone" 
-            dataKey="hospital" 
-            stroke="hsl(var(--health-secondary))" 
-            strokeWidth={2}
-            dot={{ fill: "hsl(var(--health-secondary))", strokeWidth: 2, r: 4 }}
-            name="Hospital Visits"
-          />
-          <Line 
-            type="monotone" 
-            dataKey="searches" 
-            stroke="hsl(var(--health-warning))" 
+          {shouldShowClinicalData && (
+            <Line
+              type="monotone"
+              dataKey="pharmacy"
+              stroke="hsl(var(--health-primary))"
+              strokeWidth={2}
+              dot={{ fill: "hsl(var(--health-primary))", strokeWidth: 2, r: 4 }}
+              name="Pharmacy Sales"
+            />
+          )}
+          {shouldShowClinicalData && (
+            <Line
+              type="monotone"
+              dataKey="hospital"
+              stroke="hsl(var(--health-secondary))"
+              strokeWidth={2}
+              dot={{ fill: "hsl(var(--health-secondary))", strokeWidth: 2, r: 4 }}
+              name="Hospital Visits"
+            />
+          )}
+          <Line
+            type="monotone"
+            dataKey="searches"
+            stroke="hsl(var(--health-warning))"
             strokeWidth={2}
             dot={{ fill: "hsl(var(--health-warning))", strokeWidth: 2, r: 4 }}
             name="Google Searches"
           />
-          <Line 
-            type="monotone" 
-            dataKey="social" 
-            stroke="hsl(var(--health-danger))" 
+          <Line
+            type="monotone"
+            dataKey="social"
+            stroke="hsl(var(--health-danger))"
             strokeWidth={2}
             dot={{ fill: "hsl(var(--health-danger))", strokeWidth: 2, r: 4 }}
             name="Social Media"
