@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity, Database, Search, Brain, AlertTriangle, TrendingUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePharmacyData, useHospitalData, useSearchTrendData, useSocialMentionData } from "@/lib/data";
 import { CONFIG } from "@/config";
 
@@ -29,29 +29,68 @@ export const AgentStatus = () => {
     alerter: 90
   });
 
-  // Update agent progress based on data status
+  // Track last update times for each agent
+  const lastUpdateTimes = useRef({
+    collector: Date.now() - 30000, // 30 seconds ago
+    normalizer: Date.now() - 45000, // 45 seconds ago  
+    detector: Date.now() - 20000,   // 20 seconds ago
+    predictor: Date.now() - 60000,  // 1 minute ago
+    alerter: Date.now() - 15000     // 15 seconds ago
+  });
+
+  const [currentTime, setCurrentTime] = useState(Date.now());
+
+  // Update agent progress and timestamps
   useEffect(() => {
     const updateProgress = () => {
-      setAgentProgress(prev => ({
-        collector: CONFIG.dataMode === "simulated" ? 
-          Math.min(100, prev.collector + Math.random() * 3) :
-          (!pharmacyLoading && !hospitalLoading && !searchLoading && !socialLoading) ? 100 : 
-          Math.min(95, prev.collector + Math.random() * 5),
-        normalizer: Math.min(100, prev.normalizer + Math.random() * 2),
-        detector: Math.min(100, prev.detector + Math.random() * 2.5),
-        predictor: Math.min(100, prev.predictor + Math.random() * 1.5),
-        alerter: Math.min(100, prev.alerter + Math.random() * 3)
-      }));
+      const now = Date.now();
+      
+      setAgentProgress(prev => {
+        const newProgress = {
+          collector: CONFIG.dataMode === "simulated" ? 
+            Math.min(100, prev.collector + Math.random() * 3) :
+            (!pharmacyLoading && !hospitalLoading && !searchLoading && !socialLoading) ? 100 : 
+            Math.min(95, prev.collector + Math.random() * 5),
+          normalizer: Math.min(100, prev.normalizer + Math.random() * 2),
+          detector: Math.min(100, prev.detector + Math.random() * 2.5),
+          predictor: Math.min(100, prev.predictor + Math.random() * 1.5),
+          alerter: Math.min(100, prev.alerter + Math.random() * 3)
+        };
+
+        // Update last update times when progress changes significantly
+        Object.keys(newProgress).forEach(key => {
+          const agentKey = key as keyof typeof newProgress;
+          if (Math.abs(newProgress[agentKey] - prev[agentKey]) > 1) {
+            lastUpdateTimes.current[agentKey] = now;
+          }
+        });
+
+        return newProgress;
+      });
+      
+      setCurrentTime(now);
     };
 
     const interval = setInterval(updateProgress, 2000);
     return () => clearInterval(interval);
   }, [pharmacyLoading, hospitalLoading, searchLoading, socialLoading]);
 
-  const formatTimeAgo = (minutes: number) => {
-    if (minutes < 1) return "Just now";
-    if (minutes < 60) return `${Math.floor(minutes)}min ago`;
-    return `${Math.floor(minutes / 60)}h ago`;
+  // Update current time every 30 seconds for "time ago" updates
+  useEffect(() => {
+    const timeInterval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 30000);
+    return () => clearInterval(timeInterval);
+  }, []);
+
+  const formatTimeAgo = (timestamp: number) => {
+    const diffInMinutes = Math.floor((currentTime - timestamp) / (1000 * 60));
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}min ago`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays}d ago`;
   };
 
   const agents: Agent[] = [
@@ -64,7 +103,7 @@ export const AgentStatus = () => {
       description: CONFIG.dataMode === "simulated" ? 
         "Generating simulated data streams" :
         "Fetching pharmacy sales, hospital records & social signals",
-      lastUpdate: formatTimeAgo(Math.random() * 120),
+      lastUpdate: formatTimeAgo(lastUpdateTimes.current.collector),
       progress: agentProgress.collector
     },
     {
@@ -73,7 +112,7 @@ export const AgentStatus = () => {
       status: "processing",
       icon: <Activity className="w-4 h-4" />,
       description: "Standardizing time-series data and removing outliers",
-      lastUpdate: formatTimeAgo(Math.random() * 180),
+      lastUpdate: formatTimeAgo(lastUpdateTimes.current.normalizer),
       progress: agentProgress.normalizer
     },
     {
@@ -84,7 +123,7 @@ export const AgentStatus = () => {
       description: agentProgress.detector > 90 ? 
         "Anomaly detected: Unusual patterns in Mumbai & Delhi" :
         "Analyzing statistical patterns and anomalies",
-      lastUpdate: formatTimeAgo(Math.random() * 90)
+      lastUpdate: formatTimeAgo(lastUpdateTimes.current.detector)
     },
     {
       id: 4,
@@ -92,7 +131,7 @@ export const AgentStatus = () => {
       status: "processing",
       icon: <Brain className="w-4 h-4" />,
       description: "Running baseline ML forecasts and risk correlation",
-      lastUpdate: formatTimeAgo(Math.random() * 150),
+      lastUpdate: formatTimeAgo(lastUpdateTimes.current.predictor),
       progress: agentProgress.predictor
     },
     {
@@ -101,7 +140,7 @@ export const AgentStatus = () => {
       status: "active",
       icon: <AlertTriangle className="w-4 h-4" />,
       description: "Producing early warning signals with confidence scores",
-      lastUpdate: formatTimeAgo(Math.random() * 60),
+      lastUpdate: formatTimeAgo(lastUpdateTimes.current.alerter),
       progress: agentProgress.alerter
     }
   ];
