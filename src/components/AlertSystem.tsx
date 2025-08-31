@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, TrendingUp, MapPin, Clock, CheckCircle } from "lucide-react";
 import { usePharmacyData, useHospitalData, useSearchTrendData, useSocialMentionData } from "@/lib/data";
-import { generateAlerts, calculateRiskScores, detectPharmacyAnomalies, detectHospitalAnomalies } from "@/lib/analytics";
+import { generateAlerts, calculateRiskScores, detectPharmacyAnomalies, detectHospitalAnomalies, detectSearchAnomalies, detectSocialAnomalies } from "@/lib/analytics";
 import { CONFIG } from "@/config";
 
 interface Alert {
@@ -30,10 +30,20 @@ export const AlertSystem = () => {
 
   // Generate alerts from real data
   const generatedAlerts = useMemo(() => {
-    const hasLiveData = pharmacyData && hospitalData && searchData && socialData;
-    const currentMode = CONFIG?.dataMode || "mixed";
+    // Debug logging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 AlertSystem Debug:', {
+        searchDataLength: searchData?.length || 0,
+        socialDataLength: socialData?.length || 0,
+        pharmacyDataLength: pharmacyData?.length || 0,
+        hospitalDataLength: hospitalData?.length || 0
+      });
+    }
 
-    if (currentMode === "simulated" || !hasLiveData) {
+    // Unified mode: Use all available data sources
+    const hasRequiredData = pharmacyData && hospitalData && searchData && socialData;
+
+    if (!hasRequiredData) {
       // Return static alerts for simulated mode using target diseases and cities
       return [
         {
@@ -87,12 +97,34 @@ export const AlertSystem = () => {
       ];
     }
 
-    // Generate alerts from real data
-    const riskScores = calculateRiskScores(pharmacyData, hospitalData, searchData, socialData);
-    const pharmacyAnomalies = detectPharmacyAnomalies(pharmacyData);
-    const hospitalAnomalies = detectHospitalAnomalies(hospitalData);
-    
-    return generateAlerts(riskScores, [...pharmacyAnomalies, ...hospitalAnomalies]);
+    // Generate alerts from real data (unified mode uses all sources)
+    const riskScores = calculateRiskScores(
+      pharmacyData || [],
+      hospitalData || [],
+      searchData || [],
+      socialData || []
+    );
+
+    const pharmacyAnomalies = pharmacyData ? detectPharmacyAnomalies(pharmacyData) : [];
+    const hospitalAnomalies = hospitalData ? detectHospitalAnomalies(hospitalData) : [];
+    const searchAnomalies = searchData ? detectSearchAnomalies(searchData) : [];
+    const socialAnomalies = socialData ? detectSocialAnomalies(socialData) : [];
+
+    const allAnomalies = [...pharmacyAnomalies, ...hospitalAnomalies, ...searchAnomalies, ...socialAnomalies];
+    const alerts = generateAlerts(riskScores, allAnomalies);
+
+    // Debug logging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🚨 Alert Generation Debug:', {
+        riskScoresCount: riskScores.length,
+        anomaliesCount: allAnomalies.length,
+        alertsGenerated: alerts.length,
+        searchAnomalies: searchAnomalies.length,
+        socialAnomalies: socialAnomalies.length
+      });
+    }
+
+    return alerts;
   }, [pharmacyData, hospitalData, searchData, socialData]);
 
   // Apply acknowledgment state

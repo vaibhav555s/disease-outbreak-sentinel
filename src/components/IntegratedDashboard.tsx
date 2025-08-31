@@ -19,6 +19,8 @@ import { DashboardMode, DataSourceConfig } from "@/lib/types";
 import { useDataStreamManager } from "@/hooks/useDataStreamManager";
 import { DataModeToggle } from "./DataModeToggle";
 import { DataPreviewTable } from "./DataPreviewTable";
+import { APIStatus } from "./APIStatus";
+import { RefreshButton } from "./RefreshButton";
 import { CONFIG } from "@/config";
 
 /**
@@ -175,10 +177,12 @@ export const IntegratedDashboard = () => {
             <div className="flex items-center space-x-2">
               {getHealthIcon(systemHealth.status)}
               <span className="text-sm font-medium">{systemHealth.message}</span>
+              <APIStatus showDetails={true} />
+              <RefreshButton size="sm" variant="outline" />
             </div>
-            
+
             {/* Mode Toggle */}
-            <DataModeToggle 
+            <DataModeToggle
               currentMode={dashboardMode}
               onModeChange={handleModeChange}
               streamStatus={streamStatus}
