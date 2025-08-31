@@ -1,0 +1,56 @@
+[
+  {
+    "timestamp": "2024-01-15T08:00:00Z",
+    "location": "Mumbai",
+    "disease": "dengue",
+    "value": 45,
+    "visits": 90,
+    "hospital_id": "H001",
+    "department": "Emergency"
+  },
+  {
+    "timestamp": "2024-01-15T08:00:00Z",
+    "location": "Mumbai",
+    "disease": "fever",
+    "value": 62,
+    "visits": 124,
+    "hospital_id": "H001",
+    "department": "OPD"
+  },
+  {
+    "timestamp": "2024-01-15T08:00:00Z",
+    "location": "Delhi",
+    "disease": "flu",
+    "value": 38,
+    "visits": 76,
+    "hospital_id": "H002",
+    "department": "OPD"
+  },
+  {
+    "timestamp": "2024-01-14T08:00:00Z",
+    "location": "Mumbai",
+    "disease": "dengue",
+    "value": 52,
+    "visits": 104,
+    "hospital_id": "H001",
+    "department": "Emergency"
+  },
+  {
+    "timestamp": "2024-01-14T08:00:00Z",
+    "location": "Delhi",
+    "disease": "malaria",
+    "value": 28,
+    "visits": 56,
+    "hospital_id": "H002",
+    "department": "OPD"
+  },
+  {
+    "timestamp": "2024-01-13T08:00:00Z",
+    "location": "Pune",
+    "disease": "diarrhea",
+    "value": 41,
+    "visits": 82,
+    "hospital_id": "H003",
+    "department": "Emergency"
+  }
+]

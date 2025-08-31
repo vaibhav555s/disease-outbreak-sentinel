@@ -1,0 +1,56 @@
+[
+  {
+    "timestamp": "2024-01-15T12:00:00Z",
+    "location": "Maharashtra",
+    "disease": "dengue",
+    "value": 78,
+    "interest": 78,
+    "search_term": "dengue fever",
+    "region": "Maharashtra"
+  },
+  {
+    "timestamp": "2024-01-15T12:00:00Z",
+    "location": "Delhi",
+    "disease": "fever",
+    "value": 65,
+    "interest": 65,
+    "search_term": "high temperature",
+    "region": "Delhi"
+  },
+  {
+    "timestamp": "2024-01-15T12:00:00Z",
+    "location": "Karnataka",
+    "disease": "flu",
+    "value": 42,
+    "interest": 42,
+    "search_term": "flu symptoms",
+    "region": "Karnataka"
+  },
+  {
+    "timestamp": "2024-01-14T12:00:00Z",
+    "location": "Maharashtra",
+    "disease": "dengue",
+    "value": 82,
+    "interest": 82,
+    "search_term": "mosquito fever",
+    "region": "Maharashtra"
+  },
+  {
+    "timestamp": "2024-01-14T12:00:00Z",
+    "location": "Delhi",
+    "disease": "malaria",
+    "value": 34,
+    "interest": 34,
+    "search_term": "malaria symptoms",
+    "region": "Delhi"
+  },
+  {
+    "timestamp": "2024-01-13T12:00:00Z",
+    "location": "Karnataka",
+    "disease": "diarrhea",
+    "value": 56,
+    "interest": 56,
+    "search_term": "stomach upset",
+    "region": "Karnataka"
+  }
+]

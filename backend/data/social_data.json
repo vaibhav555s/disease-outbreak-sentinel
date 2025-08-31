@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2024-01-15T14:00:00Z",
+    "location": "Maharashtra",
+    "disease": "dengue",
+    "value": 84,
+    "mentions": 42,
+    "keyword": "dengue",
+    "platform": "twitter",
+    "sentiment": "negative"
+  },
+  {
+    "timestamp": "2024-01-15T14:00:00Z",
+    "location": "Delhi",
+    "disease": "fever",
+    "value": 58,
+    "mentions": 29,
+    "keyword": "fever",
+    "platform": "twitter",
+    "sentiment": "neutral"
+  },
+  {
+    "timestamp": "2024-01-15T14:00:00Z",
+    "location": "Karnataka",
+    "disease": "flu",
+    "value": 36,
+    "mentions": 18,
+    "keyword": "flu",
+    "platform": "twitter",
+    "sentiment": "negative"
+  },
+  {
+    "timestamp": "2024-01-14T14:00:00Z",
+    "location": "Maharashtra",
+    "disease": "dengue",
+    "value": 91,
+    "mentions": 45,
+    "keyword": "mosquito",
+    "platform": "twitter",
+    "sentiment": "negative"
+  },
+  {
+    "timestamp": "2024-01-14T14:00:00Z",
+    "location": "Delhi",
+    "disease": "malaria",
+    "value": 27,
+    "mentions": 13,
+    "keyword": "chills",
+    "platform": "twitter",
+    "sentiment": "negative"
+  },
+  {
+    "timestamp": "2024-01-13T14:00:00Z",
+    "location": "Karnataka",
+    "disease": "diarrhea",
+    "value": 63,
+    "mentions": 31,
+    "keyword": "stomach upset",
+    "platform": "twitter",
+    "sentiment": "negative"
+  }
+]

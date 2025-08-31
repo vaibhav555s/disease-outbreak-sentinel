@@ -1,0 +1,56 @@
+[
+  {
+    "timestamp": "2024-01-15T10:00:00Z",
+    "location": "Mumbai",
+    "disease": "dengue",
+    "value": 67,
+    "sales": 335,
+    "medicine": "paracetamol",
+    "pharmacy_id": "P001"
+  },
+  {
+    "timestamp": "2024-01-15T10:00:00Z",
+    "location": "Mumbai",
+    "disease": "fever",
+    "value": 54,
+    "sales": 270,
+    "medicine": "ibuprofen",
+    "pharmacy_id": "P001"
+  },
+  {
+    "timestamp": "2024-01-15T10:00:00Z",
+    "location": "Delhi",
+    "disease": "flu",
+    "value": 43,
+    "sales": 215,
+    "medicine": "oseltamivir",
+    "pharmacy_id": "P002"
+  },
+  {
+    "timestamp": "2024-01-14T10:00:00Z",
+    "location": "Mumbai",
+    "disease": "dengue",
+    "value": 71,
+    "sales": 355,
+    "medicine": "oral_rehydration",
+    "pharmacy_id": "P001"
+  },
+  {
+    "timestamp": "2024-01-14T10:00:00Z",
+    "location": "Delhi",
+    "disease": "malaria",
+    "value": 35,
+    "sales": 175,
+    "medicine": "chloroquine",
+    "pharmacy_id": "P002"
+  },
+  {
+    "timestamp": "2024-01-13T10:00:00Z",
+    "location": "Pune",
+    "disease": "diarrhea",
+    "value": 48,
+    "sales": 240,
+    "medicine": "loperamide",
+    "pharmacy_id": "P003"
+  }
+]
