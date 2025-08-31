@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import indiaMapImage from "@/assets/india-map.png";
 import { usePharmacyData, useHospitalData, useSearchTrendData, useSocialMentionData } from "@/lib/data";
 import { calculateRiskScores } from "@/lib/analytics";
-import { CONFIG } from "@/config";
+// Removed CONFIG import - using unified mode
 
 interface Hotspot {
   id: string;
@@ -22,7 +22,14 @@ const cityCoordinates: Record<string, { x: number; y: number }> = {
   "Pune": { x: 28, y: 58 },
   "Bengaluru": { x: 30, y: 75 },
   "Chennai": { x: 45, y: 80 },
-  "Kolkata": { x: 65, y: 45 }
+  "Kolkata": { x: 65, y: 45 },
+  // Additional cities for more hotspot coverage
+  "Hyderabad": { x: 40, y: 70 },
+  "Ahmedabad": { x: 20, y: 40 },
+  "Jaipur": { x: 30, y: 35 },
+  "Lucknow": { x: 50, y: 35 },
+  "Kochi": { x: 25, y: 85 },
+  "Indore": { x: 25, y: 45 }
 };
 
 export const IndiaMap = () => {
@@ -34,7 +41,20 @@ export const IndiaMap = () => {
   const [selectedHotspot, setSelectedHotspot] = useState<Hotspot | null>(null);
 
   const hotspots = useMemo(() => {
-    if (CONFIG.dataMode === "simulated" || !pharmacyData || !hospitalData || !searchData || !socialData) {
+    // Debug logging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🗺️ IndiaMap Debug:', {
+        searchDataLength: searchData?.length || 0,
+        socialDataLength: socialData?.length || 0,
+        pharmacyDataLength: pharmacyData?.length || 0,
+        hospitalDataLength: hospitalData?.length || 0
+      });
+    }
+
+    // Unified mode: Use all available data sources
+    const hasRequiredData = pharmacyData && hospitalData && searchData && socialData;
+
+    if (!hasRequiredData) {
       // Return simulated hotspots for simulated mode using target cities and diseases
       return [
         { id: "1", state: "Delhi", city: "Delhi", x: 35, y: 25, severity: "high" as const, disease: "Dengue", confidence: 85 },
@@ -46,20 +66,43 @@ export const IndiaMap = () => {
       ];
     }
 
-    // Calculate risk scores from real data
-    const riskScores = calculateRiskScores(pharmacyData, hospitalData, searchData, socialData);
+    // Calculate risk scores from real data (unified mode uses all sources)
+    const riskScores = calculateRiskScores(
+      pharmacyData || [],
+      hospitalData || [],
+      searchData || [],
+      socialData || []
+    );
+
+    // Debug logging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🎯 Risk Scores:', riskScores);
+    }
     
     // Convert risk scores to hotspots
-    return riskScores
-      .filter(risk => risk.score > 30) // Only show significant risks
+    // Deduplicate by city and keep highest risk score
+    const deduplicatedRisks = riskScores.reduce((acc, risk) => {
+      const existing = acc.find(r => r.city === risk.city);
+      if (!existing || risk.score > existing.score) {
+        acc = acc.filter(r => r.city !== risk.city);
+        acc.push(risk);
+      }
+      return acc;
+    }, [] as typeof riskScores);
+
+    return deduplicatedRisks
+      .filter(risk => risk.score > 0.15) // Show low severity and above (green hotspots included)
       .map((risk, index) => {
-        const coords = cityCoordinates[risk.city] || { x: 30 + Math.random() * 20, y: 50 + Math.random() * 30 };
+        // Use fixed coordinates for cities, fallback to state center if city not found
+        const coords = cityCoordinates[risk.city] ||
+                      cityCoordinates[risk.state] ||
+                      { x: 50, y: 50 }; // Fixed fallback position
         
         let severity: "low" | "medium" | "high" | "critical";
-        if (risk.score >= 80) severity = "critical";
-        else if (risk.score >= 60) severity = "high";
-        else if (risk.score >= 40) severity = "medium";
-        else severity = "low";
+        if (risk.score >= 0.7) severity = "critical";
+        else if (risk.score >= 0.5) severity = "high";
+        else if (risk.score >= 0.3) severity = "medium";
+        else severity = "low"; // Green hotspots for 0.15-0.3 range
 
         // Determine primary disease from contributing factors
         const primaryDisease = risk.factors.length > 0 ? 
@@ -91,10 +134,10 @@ export const IndiaMap = () => {
 
   const getSeveritySize = (severity: string) => {
     switch (severity) {
-      case "low": return "w-3 h-3";
-      case "medium": return "w-4 h-4";
-      case "high": return "w-5 h-5";
-      case "critical": return "w-6 h-6";
+      case "low": return "w-3 h-3"; // Small green dots for low risk
+      case "medium": return "w-4 h-4"; // Medium yellow dots
+      case "high": return "w-5 h-5"; // Large orange dots
+      case "critical": return "w-6 h-6"; // Extra large red dots
       default: return "w-4 h-4";
     }
   };

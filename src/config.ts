@@ -1,21 +1,5 @@
-const getDataMode = (): "simulated" | "live" | "mixed" => {
-  // Check if we're in a browser environment
-  if (typeof window === 'undefined') {
-    return "mixed"; // Default for SSR
-  }
-
-  try {
-    // Check localStorage first, then env variable, then default to mixed (recommended demo mode)
-    const stored = localStorage.getItem("dataMode") as "simulated" | "live" | "mixed" | null;
-    if (stored) return stored;
-  } catch (error) {
-    console.warn('localStorage not available:', error);
-  }
-
-  return (import.meta.env.VITE_DATA_MODE as "simulated" | "live" | "mixed") || "mixed";
-};
-
-export const DATA_MODE = getDataMode();
+// Single unified mode: Simulated clinical data + Live trends/social APIs
+export const DATA_MODE = "unified" as const;
 
 // Target cities as per scope
 export const TARGET_CITIES = ["Mumbai", "Delhi", "Pune", "Bengaluru", "Chennai", "Kolkata"] as const;
@@ -28,7 +12,7 @@ export const CONFIG = {
   targetCities: TARGET_CITIES,
   targetDiseases: TARGET_DISEASES,
   polling: {
-    interval: 4000, // 4 seconds
+    interval: 0, // Disable auto-refresh - use manual refresh instead
   },
   analytics: {
     anomalyThreshold: 2, // z-score threshold

@@ -120,6 +120,102 @@ export const detectHospitalAnomalies = (data: HospitalData[]): Anomaly[] => {
   return anomalies;
 };
 
+export const detectSearchAnomalies = (data: SearchTrendData[]): Anomaly[] => {
+  const anomalies: Anomaly[] = [];
+
+  console.log('🔍 Search Anomaly Detection:', { dataLength: data.length, sampleData: data.slice(0, 2) });
+
+  // Group by location
+  const groupedData = data.reduce((acc, item) => {
+    const key = `${item.state}-${item.city}`;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {} as Record<string, SearchTrendData[]>);
+
+  Object.entries(groupedData).forEach(([location, items]) => {
+    // Check for anomalies in total search activity
+    const values = items.map(item => item.fever + item.cough + item.diarrhea + item.dengue + item.malaria + item.flu);
+    const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
+    const std = standardDeviation(values, mean);
+
+    const latest = items[items.length - 1];
+    const totalSearches = latest.fever + latest.cough + latest.diarrhea + latest.dengue + latest.malaria + latest.flu;
+    const zscore = calculateZScore(totalSearches, mean, std);
+
+    console.log(`🔍 Search Analysis for ${location}:`, {
+      totalSearches,
+      mean: mean.toFixed(2),
+      std: std.toFixed(2),
+      zscore: zscore.toFixed(2),
+      threshold: CONFIG.analytics.anomalyThreshold
+    });
+
+    // Use original threshold for consistent behavior across modes
+    const threshold = CONFIG.analytics.anomalyThreshold;
+    if (Math.abs(zscore) > threshold) {
+      anomalies.push({
+        type: "search",
+        location,
+        metric: "total_searches",
+        value: totalSearches,
+        zscore,
+        severity: Math.abs(zscore) > 3 ? "critical" : Math.abs(zscore) > 2.5 ? "high" : "medium"
+      });
+    }
+  });
+
+  console.log('🔍 Search Anomalies Found:', anomalies.length);
+  return anomalies;
+};
+
+export const detectSocialAnomalies = (data: SocialMentionData[]): Anomaly[] => {
+  const anomalies: Anomaly[] = [];
+
+  console.log('📱 Social Anomaly Detection:', { dataLength: data.length, sampleData: data.slice(0, 2) });
+
+  // Group by location
+  const groupedData = data.reduce((acc, item) => {
+    const key = `${item.state}-${item.city}`;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {} as Record<string, SocialMentionData[]>);
+
+  Object.entries(groupedData).forEach(([location, items]) => {
+    const values = items.map(item => item.health_mentions);
+    const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
+    const std = standardDeviation(values, mean);
+
+    const latest = items[items.length - 1];
+    const zscore = calculateZScore(latest.health_mentions, mean, std);
+
+    console.log(`📱 Social Analysis for ${location}:`, {
+      healthMentions: latest.health_mentions,
+      mean: mean.toFixed(2),
+      std: std.toFixed(2),
+      zscore: zscore.toFixed(2),
+      threshold: 1.5
+    });
+
+    // Use original threshold for consistent behavior across modes
+    const threshold = CONFIG.analytics.anomalyThreshold;
+    if (Math.abs(zscore) > threshold) {
+      anomalies.push({
+        type: "social",
+        location,
+        metric: "health_mentions",
+        value: latest.health_mentions,
+        zscore,
+        severity: Math.abs(zscore) > 3 ? "critical" : Math.abs(zscore) > 2.5 ? "high" : "medium"
+      });
+    }
+  });
+
+  console.log('📱 Social Anomalies Found:', anomalies.length);
+  return anomalies;
+};
+
 // Risk score calculation
 export const calculateRiskScores = (
   pharmacyData: PharmacyData[],
@@ -129,10 +225,12 @@ export const calculateRiskScores = (
 ): RiskScore[] => {
   const scores: RiskScore[] = [];
   
-  // Get unique locations
+  // Get unique locations from all available data sources
   const locations = new Set([
     ...pharmacyData.map(d => `${d.state}-${d.city}`),
     ...hospitalData.map(d => `${d.state}-${d.city}`),
+    ...searchData.map(d => `${d.state}-${d.city}`),
+    ...socialData.map(d => `${d.state}-${d.city}`),
   ]);
 
   locations.forEach(location => {
@@ -146,7 +244,7 @@ export const calculateRiskScores = (
     let score = 0;
     let confidence = 0;
     const factors: string[] = [];
-    
+
     // Pharmacy signal (40% weight)
     if (pharmacyItems.length > 0) {
       const latest = pharmacyItems[pharmacyItems.length - 1];
@@ -157,7 +255,7 @@ export const calculateRiskScores = (
       }
       confidence += 0.25;
     }
-    
+
     // Hospital signal (35% weight)
     if (hospitalItems.length > 0) {
       const latest = hospitalItems[hospitalItems.length - 1];
@@ -168,7 +266,7 @@ export const calculateRiskScores = (
       }
       confidence += 0.25;
     }
-    
+
     // Search trends (15% weight)
     if (searchItems.length > 0) {
       const latest = searchItems[searchItems.length - 1];
@@ -179,7 +277,7 @@ export const calculateRiskScores = (
       }
       confidence += 0.25;
     }
-    
+
     // Social mentions (10% weight)
     if (socialItems.length > 0) {
       const latest = socialItems[socialItems.length - 1];
@@ -207,8 +305,14 @@ export const calculateRiskScores = (
 // Alert generation
 export const generateAlerts = (riskScores: RiskScore[], anomalies: Anomaly[]): AlertData[] => {
   const alerts: AlertData[] = [];
-  
-  // High-risk locations
+
+  console.log('🚨 Alert Generation:', {
+    riskScoresCount: riskScores.length,
+    anomaliesCount: anomalies.length,
+    riskScoreValues: riskScores.map(r => r.score)
+  });
+
+  // High-risk locations (original threshold)
   riskScores.filter(score => score.score > 0.6).forEach((score, index) => {
     const severity = score.score > 0.8 ? "critical" : score.score > 0.7 ? "high" : "medium";
     const diseases = ["Dengue", "Malaria", "Diarrhea", "Flu", "Fever", "Cough"];

@@ -1,30 +1,29 @@
 # FastAPI Backend Dependencies for Outbreak Sentinel
+# Minimal setup compatible with Python 3.13
 
 # Core FastAPI framework
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
+fastapi
+uvicorn[standard]
 
 # Data validation and serialization
-pydantic==2.5.0
+pydantic
 
-# Data processing
-pandas==2.1.4
-numpy==1.24.3
-
-# Date/time handling
-python-dateutil==2.8.2
+# Date/time handling (built into Python, but explicit for clarity)
+python-dateutil
 
 # HTTP client for external APIs (future use)
-httpx==0.25.2
-requests==2.31.0
+httpx
+requests
 
 # Environment and configuration
-python-dotenv==1.0.0
+python-dotenv
 
 # Development and testing
-pytest==7.4.3
-pytest-asyncio==0.21.1
+pytest
+pytest-asyncio
 
-# Optional: For future live data integration
-# pytrends==4.9.2
-# tweepy==4.14.0
+# Optional: For future live data integration (install separately when needed)
+# pandas>=2.2.0  # Install only if needed: pip install pandas
+# numpy>=1.26.0  # Install only if needed: pip install numpy
+# pytrends>=4.9.0
+# tweepy>=4.14.0

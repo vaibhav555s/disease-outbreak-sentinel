@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional, Literal
 from pydantic import BaseModel, Field
 from pathlib import Path
-import pandas as pd
 import logging
 
 logger = logging.getLogger(__name__)
@@ -230,6 +229,66 @@ class SyntheticDataGenerator:
         
         return data_points
 
+    def generate_trends_data(
+        self,
+        days: int = 7,
+        states: Optional[List[str]] = None,
+        keywords: Optional[List[str]] = None,
+        simulate_live: bool = False
+    ) -> List[HealthDataPoint]:
+        """Generate synthetic Google Trends data"""
+
+        states = states or TARGET_STATES
+        data_points = []
+
+        for day_index in range(days):
+            date = datetime.now() - timedelta(days=days-1-day_index)
+            day_of_year = date.timetuple().tm_yday
+
+            for state in states:
+                for disease in TARGET_DISEASES:
+                    pattern = DISEASE_PATTERNS[disease]
+
+                    # Calculate multipliers
+                    seasonal_mult = self._get_seasonal_multiplier(day_of_year, disease)
+                    outbreak_mult = self._get_outbreak_multiplier(day_index, days)
+
+                    # Generate search interest for each search term
+                    for search_term in pattern["search_terms"]:
+                        # Base search interest (Google Trends scale 0-100)
+                        base_interest = 10 + self.random.randint(0, 20)  # 10-30 base interest
+                        raw_interest = base_interest * seasonal_mult * outbreak_mult
+
+                        # Add random noise and daily variation
+                        daily_variation = 0.8 + self.random.random() * 0.4  # ±20% daily variation
+                        raw_interest *= daily_variation
+
+                        # Simulate live data with more recent bias
+                        if simulate_live:
+                            recency_boost = 1 + (day_index / days) * 0.3  # More recent = higher
+                            raw_interest *= recency_boost
+
+                        normalized_value = self._normalize_value(raw_interest, "trends")
+
+                        data_points.append(HealthDataPoint(
+                            timestamp=date.isoformat(),
+                            location=state,
+                            disease=disease,
+                            source="trends",
+                            value=round(normalized_value, 2),
+                            metadata={
+                                "raw_value": round(raw_interest, 1),
+                                "unit": "search_interest",
+                                "search_term": search_term,
+                                "region": state,
+                                "seasonal_multiplier": round(seasonal_mult, 2),
+                                "outbreak_multiplier": round(outbreak_mult, 2),
+                                "is_live": simulate_live
+                            }
+                        ))
+
+        return data_points
+
     def generate_social_data(
         self,
         days: int = 7,
@@ -305,6 +364,25 @@ class StaticDataLoader:
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(exist_ok=True)
         logger.info(f"Static data loader initialized with directory: {self.data_dir}")
+
+    def _parse_timestamp(self, timestamp_str: str) -> datetime:
+        """Parse timestamp string to datetime object, handling timezone issues"""
+        try:
+            # Handle ISO format with Z suffix
+            if timestamp_str.endswith('Z'):
+                timestamp_str = timestamp_str[:-1] + '+00:00'
+
+            # Parse and convert to naive datetime for comparison
+            dt = datetime.fromisoformat(timestamp_str)
+            if dt.tzinfo is not None:
+                # Convert to naive datetime (remove timezone info)
+                dt = dt.replace(tzinfo=None)
+
+            return dt
+        except Exception as e:
+            logger.warning(f"Failed to parse timestamp '{timestamp_str}': {e}")
+            # Return current time as fallback
+            return datetime.now()
 
     def _load_json_file(self, filename: str) -> List[Dict[str, Any]]:
         """Load data from JSON file"""
@@ -382,7 +460,7 @@ class StaticDataLoader:
 
         # Filter by days (keep most recent)
         cutoff_date = datetime.now() - timedelta(days=days)
-        transformed = [d for d in transformed if datetime.fromisoformat(d.timestamp.replace('Z', '+00:00')) >= cutoff_date]
+        transformed = [d for d in transformed if self._parse_timestamp(d.timestamp) >= cutoff_date]
 
         return transformed
 
@@ -397,7 +475,7 @@ class StaticDataLoader:
 
         # Filter by days
         cutoff_date = datetime.now() - timedelta(days=days)
-        transformed = [d for d in transformed if datetime.fromisoformat(d.timestamp.replace('Z', '+00:00')) >= cutoff_date]
+        transformed = [d for d in transformed if self._parse_timestamp(d.timestamp) >= cutoff_date]
 
         return transformed
 
@@ -412,7 +490,7 @@ class StaticDataLoader:
 
         # Filter by days
         cutoff_date = datetime.now() - timedelta(days=days)
-        transformed = [d for d in transformed if datetime.fromisoformat(d.timestamp.replace('Z', '+00:00')) >= cutoff_date]
+        transformed = [d for d in transformed if self._parse_timestamp(d.timestamp) >= cutoff_date]
 
         return transformed
 
@@ -427,7 +505,7 @@ class StaticDataLoader:
 
         # Filter by days
         cutoff_date = datetime.now() - timedelta(days=days)
-        transformed = [d for d in transformed if datetime.fromisoformat(d.timestamp.replace('Z', '+00:00')) >= cutoff_date]
+        transformed = [d for d in transformed if self._parse_timestamp(d.timestamp) >= cutoff_date]
 
         return transformed
 
